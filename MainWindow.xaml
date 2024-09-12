@@ -1,0 +1,81 @@
+﻿<Window x:Class="testmap.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:testmap"
+        xmlns:gmaps="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
+        mc:Ignorable="d"
+        Title="TestMap" Height="720" Width="1080">
+
+    <Grid>
+
+
+        <!-- Define two rows in the Grid -->
+        <Grid.RowDefinitions>
+            <!-- Row 0: Fixed height for the toolbar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Row 1: Takes up remaining space -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar in the first row -->
+        <Grid Grid.Row="0" Background="LightGray" FlowDirection="RightToLeft">
+            <Grid.ColumnDefinitions>
+                <!-- Define columns for the buttons -->
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Show Button -->
+            <Button Content="הצג"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Width="102" Height="49"
+                    Margin="5,5,0,5"
+                    Click="Button_Click"
+                    Grid.Column="0"/>
+
+            <!-- Remove Button -->
+            <Button Content="הסר"
+                    Visibility="Hidden"
+                    HorizontalAlignment="Right"
+                    Margin="5,5,0,5"
+                    VerticalAlignment="Center"
+                    Width="102" Height="49"
+                    Click="Button_Click_1"
+                    Grid.Column="1"/>
+
+            <Slider Name="zoomSlider" Maximum="18" Minimum="2"
+                    VerticalAlignment="Center" Grid.Column="1"
+                    Value="2"
+                    Margin="5" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
+                    ValueChanged="zoomSlider_ValueChanged"/>
+
+            <TextBox x:Name="latTextBox" Text="קו רוחב" HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center" Width="120" Height="23" Grid.Column="3" />
+            <TextBox x:Name="lngTextBox" Text="קו רוחב" HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center" Width="120" Height="23" Grid.Column="4" />
+            <Button Content="עבור אל" HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center" Width="75" Height="23" Grid.Column="2" Click="GoToButton_Click"/>
+            <ComboBox x:Name="accessModeBox" 
+                        Grid.Column="5" 
+                        Margin="5" 
+                        VerticalAlignment="Center" 
+                        Width="100" 
+                        SelectionChanged="accessModeBox_SelectionChanged">
+                <ComboBoxItem Content="ServerAndCache" Tag="ServerAndCache"/>
+                <ComboBoxItem Content="CacheOnly" Tag="CacheOnly"/>
+            </ComboBox>
+
+        </Grid>
+
+        <!-- GMapControl in the second row -->
+        <gmaps:GMapControl x:Name="gmap"
+                           Grid.Row="1"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch"
+                           Margin="0"/>
+    </Grid>
+</Window>
