@@ -27,6 +27,8 @@ packages/
 
 # Logs
 *.log
+*.tmp
+*.cache
 
 # Dependency directories
 node_modules/
@@ -53,7 +55,6 @@ wwwroot/
 # Other files
 *.db
 *.bak
-*.tmp
 
 # Mac OS X
 .DS_Store
@@ -72,3 +73,7 @@ ehthumbs.db
 *.sln.docstates
 *.csproj.user
 *.vbproj.user
+
+
+# Visual Studio
+.vs/
