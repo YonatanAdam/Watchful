@@ -1,7 +1,7 @@
-# wpf_map
+# Watchful
 
 ![Alt text](assets/watchful-logo.ico)
 
-experimental gmap in wpf for school
-
-
+# Experimental gmap in wpf for school.
+- 'MVVM' architecture
+- DataBase
