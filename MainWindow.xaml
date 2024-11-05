@@ -6,76 +6,67 @@
         xmlns:local="clr-namespace:testmap"
         xmlns:gmaps="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
         mc:Ignorable="d"
-        Title="TestMap" Height="720" Width="1080">
+        Title="Watchful" Height="1280" Width="720"
+        Icon="assets\watchful-logo.ico"
+        Background="#FF1E1E1E">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#FF333333"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF444444"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#FF333333"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF444444"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+        </Style>
+    </Window.Resources>
 
     <Grid>
-
-
-        <!-- Define two rows in the Grid -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="1031*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <!-- Row 0: Fixed height for the toolbar -->
             <RowDefinition Height="Auto"/>
-            <!-- Row 1: Takes up remaining space -->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Toolbar in the first row -->
-        <Grid Grid.Row="0" Background="LightGray" FlowDirection="RightToLeft">
+        <Grid Grid.Row="0" Background="#FF2A2A2A" FlowDirection="RightToLeft" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
-                <!-- Define columns for the buttons -->
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
-            <!-- Show Button -->
-            <Button Content="הצג"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Width="102" Height="49"
-                    Margin="5,5,0,5"
-                    Click="Button_Click"
-                    Grid.Column="0"/>
-
-            <!-- Remove Button -->
-            <Button Content="הסר"
-                    Visibility="Hidden"
-                    HorizontalAlignment="Right"
-                    Margin="5,5,0,5"
-                    VerticalAlignment="Center"
-                    Width="102" Height="49"
-                    Click="Button_Click_1"
-                    Grid.Column="1"/>
-
-            <Slider Name="zoomSlider" Maximum="18" Minimum="2"
-                    VerticalAlignment="Center" Grid.Column="1"
-                    Value="2"
-                    Margin="5" TickPlacement="BottomRight" IsSnapToTickEnabled="True"
-                    ValueChanged="zoomSlider_ValueChanged"/>
-
-            <TextBox x:Name="latTextBox" Text="קו רוחב" HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center" Width="120" Height="23" Grid.Column="3" />
-            <TextBox x:Name="lngTextBox" Text="קו רוחב" HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center" Width="120" Height="23" Grid.Column="4" />
-            <Button Content="עבור אל" HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center" Width="75" Height="23" Grid.Column="2" Click="GoToButton_Click"/>
-            <ComboBox x:Name="accessModeBox" 
-                        Grid.Column="5" 
-                        Margin="5" 
-                        VerticalAlignment="Center" 
-                        Width="100" 
-                        SelectionChanged="accessModeBox_SelectionChanged">
-                <ComboBoxItem Content="ServerAndCache" Tag="ServerAndCache"/>
-                <ComboBoxItem Content="CacheOnly" Tag="CacheOnly"/>
+            <ComboBox x:Name="mapTypeBox" Margin="5" Grid.Column="0" SelectionChanged="MapTypeBox_SelectionChanged">
+                <ComboBoxItem Content="GoogleMap" Tag="GoogleMap"/>
+                <ComboBoxItem Content="GoogleSatellite" Tag="GoogleSatellite"/>
+                <ComboBoxItem Content="BingMap" Tag="BingMap"/>
+                <ComboBoxItem Content="OpenStreetMap" Tag="OpenStreetMap"/>
             </ComboBox>
-
+            <Button x:Name="clearMarks"  Grid.Column="1" Content="Clear Marks" Click="ClearMarks_Click"/>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock x:Name="zoomLvl" Foreground="White" Margin="0,0,10,0"/>
+                <TextBlock x:Name="coordinates" Foreground="White" />
+            </StackPanel>
         </Grid>
 
-        <!-- GMapControl in the second row -->
         <gmaps:GMapControl x:Name="gmap"
-                           Grid.Row="1"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch"
-                           Margin="0"/>
+                           Grid.Row="1" Grid.ColumnSpan="2"
+                           MouseRightButtonDown="Gmap_MouseRightButtonDown"/>
     </Grid>
 </Window>
