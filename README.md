@@ -1,6 +1,6 @@
-# Watchful ![Alt text](assets/watchful-logo.ico)
+# Watchful ![Alt text](Watchful/assets/watchful-logo.ico)
 
-![Alt text](assets/demo.png)
+![Alt text](Watchful/assets/demo.png)
 
 # Experimental gmap in wpf for school.
 - 'MVVM' architecture
