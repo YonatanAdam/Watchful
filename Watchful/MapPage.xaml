@@ -1,0 +1,63 @@
+﻿<Page x:Class="Watchful.MapPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Watchful"
+      xmlns:gmaps="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
+      mc:Ignorable="d"
+      Title="Watchful" Height="900" Width="1600"
+      Background="#FF1E1E1E">
+
+    <Grid>
+        <!-- <Grid.ColumnDefinitions> -->
+        <!--     <ColumnDefinition Width="50*"/> -->
+        <!--     <ColumnDefinition Width="1031*"/> -->
+        <!-- </Grid.ColumnDefinitions> -->
+        <!-- Main layout rows for header and map display -->
+        <Grid.RowDefinitions>
+            <!-- Top Header Row for controls and settings button -->
+            <RowDefinition Height="Auto"/>
+            <!-- Map Display Row for the GMap control -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top Header Bar with Controls (Map Type Selector, Clear Marks, Zoom Level, Coordinates, Settings Button) -->
+        <Grid Grid.Row="0" Background="#FF2A2A2A" FlowDirection="RightToLeft" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <!-- Column for Map Type ComboBox -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- Column for Clear Marks Button -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- Column for Zoom Level and Coordinates Display -->
+                <ColumnDefinition Width="*"/>
+                <!-- Column for Settings Button -->
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Map Type ComboBox -->
+            <ComboBox x:Name="mapTypeBox" Margin="5" Grid.Column="0" SelectionChanged="MapTypeBox_SelectionChanged">
+                <ComboBoxItem Content="GoogleMap" Tag="GoogleMap"/>
+                <ComboBoxItem Content="GoogleSatellite" Tag="GoogleSatellite"/>
+                <ComboBoxItem Content="BingMap" Tag="BingMap"/>
+                <ComboBoxItem Content="OpenStreetMap" Tag="OpenStreetMap"/>
+            </ComboBox>
+
+            <!-- Clear Marks Button -->
+            <Button x:Name="clearMarks" Grid.Column="1" Content="Clear Marks" Click="ClearMarks_Click"/>
+
+            <!-- StackPanel for displaying Zoom Level and Coordinates -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock x:Name="zoomLvl" Foreground="White" Margin="0,0,10,0"/>
+                <TextBlock x:Name="coordinates" Foreground="White"/>
+            </StackPanel>
+
+            <!-- Settings Button -->
+            <Button x:Name="settingsButton" Grid.Column="3" Content="Settings" Margin="5" Click="SettingsButton_Click"/>
+        </Grid>
+
+        <gmaps:GMapControl x:Name="gmap"
+                           Grid.Row="1" Grid.ColumnSpan="2"
+                           MouseRightButtonDown="Gmap_MouseRightButtonDown"/>
+    </Grid>
+</Page>
