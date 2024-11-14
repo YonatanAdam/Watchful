@@ -17,7 +17,7 @@ namespace Watchful
     public partial class MainWindow : Window
     {
 
-        private DispatcherTimer _zoomUpdateTimer;
+        // private DispatcherTimer _zoomUpdateTimer;
 
         public MainWindow()
         {

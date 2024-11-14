@@ -25,18 +25,18 @@
         <!-- Top Header Bar with Controls (Map Type Selector, Clear Marks, Zoom Level, Coordinates, Settings Button) -->
         <Grid Grid.Row="0" Background="#FF2A2A2A" FlowDirection="RightToLeft" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
-                <!-- Column for Map Type ComboBox -->
+                <!-- Column for Map Type ComboBox (Auto width) -->
                 <ColumnDefinition Width="Auto"/>
-                <!-- Column for Clear Marks Button -->
+                <!-- Column for Clear Marks Button (Auto width) -->
                 <ColumnDefinition Width="Auto"/>
-                <!-- Column for Zoom Level and Coordinates Display -->
+                <!-- Column for Zoom Level and Coordinates Display (Takes remaining space) -->
                 <ColumnDefinition Width="*"/>
-                <!-- Column for Settings Button -->
+                <!-- Column for Settings Button (Auto width) -->
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <!-- Map Type ComboBox -->
-            <ComboBox x:Name="mapTypeBox" Margin="5" Grid.Column="0" SelectionChanged="MapTypeBox_SelectionChanged">
+            <ComboBox x:Name="mapTypeBox" Margin="5" Grid.Column="0" MaxWidth="300" SelectionChanged="MapTypeBox_SelectionChanged">
                 <ComboBoxItem Content="GoogleMap" Tag="GoogleMap"/>
                 <ComboBoxItem Content="GoogleSatellite" Tag="GoogleSatellite"/>
                 <ComboBoxItem Content="BingMap" Tag="BingMap"/>
@@ -44,7 +44,7 @@
             </ComboBox>
 
             <!-- Clear Marks Button -->
-            <Button x:Name="clearMarks" Grid.Column="1" Content="Clear Marks" Click="ClearMarks_Click"/>
+            <Button x:Name="clearMarks" Grid.Column="1" Margin="5" Content="Clear Marks" Click="ClearMarks_Click"/>
 
             <!-- StackPanel for displaying Zoom Level and Coordinates -->
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">

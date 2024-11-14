@@ -7,7 +7,7 @@
         xmlns:gmaps="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
         mc:Ignorable="d"
         Title="Watchful" Height="900" Width="1600"
-        Icon="assets\watchful-logo.ico"
+        Icon="assets\watchful-logo2.ico"
         Background="#FF1E1E1E">
     
     

@@ -24,7 +24,7 @@
         </Grid.RowDefinitions>
 
         <!-- Logo Image -->
-        <Image Grid.Row="0" Width="100" Height="100" Source="assets/watchful-logo.ico" 
+        <Image Grid.Row="0" Width="200" Height="200" Source="assets/watchful-logo.png" 
                HorizontalAlignment="Center" Margin="0,0,0,10"/>
 
         <!-- Username Label and TextBox -->

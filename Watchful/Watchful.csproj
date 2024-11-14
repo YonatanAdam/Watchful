@@ -158,6 +158,12 @@
     <Resource Include="assets\demo.png" />
     <Resource Include="assets\watchful-logo.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\watchful-logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\watchful-logo2.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
