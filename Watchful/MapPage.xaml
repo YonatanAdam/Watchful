@@ -33,6 +33,9 @@
                 <ColumnDefinition Width="*"/>
                 <!-- Column for Settings Button (Auto width) -->
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <!-- Map Type ComboBox -->
@@ -45,6 +48,10 @@
 
             <!-- Clear Marks Button -->
             <Button x:Name="clearMarks" Grid.Column="1" Margin="5" Content="Clear Marks" Click="ClearMarks_Click"/>
+            <!--Load Marks from DB -->
+            <Button x:Name="LoadMarks" Grid.Column="4" Margin="5" Content="Load Marks" Click="LoadMarks_OnClick"/>
+            <!--Add Mark to DB -->
+            <Button x:Name="AddMark" Grid.Column="5" Margin="5" Content="Add Mark" Click="AddMark_OnClick"/>
 
             <!-- StackPanel for displaying Zoom Level and Coordinates -->
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">

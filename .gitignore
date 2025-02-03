@@ -406,3 +406,6 @@ FodyWeavers.xsd
 
 .idea
 Watchful.sln.DotSettings
+
+*.accdb
+!ViewModel/Watchful2DB.accdb

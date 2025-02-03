@@ -7,6 +7,8 @@ using System;
 using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using ViewModel;
+using Location = Model.Location;
 
 
 namespace Watchful
@@ -29,8 +31,11 @@ namespace Watchful
         
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to the SettingsPage when the Settings button is clicked
-            _mainWindow.MainFrame.Navigate(new SettingsPage(_mainWindow));
+            // Navigate to the SettingsPage with page caching
+            _mainWindow.MainFrame.NavigationService.Navigate(new SettingsPage(_mainWindow));
+    
+            // Optional: Remove back entry to prevent multiple instances
+            _mainWindow.MainFrame.NavigationService.RemoveBackEntry();
         }
 
         private void Map_load(/*object sender, EventArgs e*/)
@@ -53,7 +58,7 @@ namespace Watchful
                 gmap.MapProvider = GMapProviders.OpenStreetMap;
                 // In your window/page load or initialization method
                 mapTypeBox.SelectedIndex = 3;
-                GMaps.Instance.Mode = AccessMode.ServerAndCache; // First run must be with server so the map could load and then it can be changes to CacheOnly.
+                GMaps.Instance.Mode = AccessMode.ServerAndCache; // First run must be with server so the map could load, and then it can be changes to CacheOnly.
                 gmap.Position = new PointLatLng(31.4117257, 35.0818155); // Start in Israel
 
                 GMapProvider.Language = LanguageType.Hebrew;
@@ -168,6 +173,58 @@ namespace Watchful
         private void ClearMarks_Click(object sender, RoutedEventArgs e)
         {
             gmap.Markers.Clear();
+        }
+
+        private void LoadMarks_OnClick(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Loading DB");
+            var db = new LocationDB(); // Ensure LocationDB is correctly implemented
+            Console.WriteLine("DONE Loading DB");
+
+            const string tableName = "LocationTbl"; // Your table name
+
+            // Fetch entities from the table
+            var entities = db.Select(tableName);
+            Console.WriteLine($"Data from {tableName}:");
+            string dbPath = "D:\\Watchful\\ViewModel\\WatchfulDB2.accdb";
+            Console.WriteLine("Database Path: " + dbPath);
+
+
+            // Print each entity's details 
+            foreach (var entity in entities)
+            {
+                var tempLoc = (Location)entity;
+                // PointLatLng latLng = gmap.FromLocalToLatLng((int)tempLoc.Latitude, (int)tempLoc.Longitude);
+                PointLatLng latLng = new PointLatLng(tempLoc.Latitude, tempLoc.Longitude);
+
+                // Create a new marker at the clicked position
+                var marker = new GMapMarker(latLng)
+                {
+                    Shape = new System.Windows.Shapes.Ellipse
+                    {
+                        Width = 10,
+                        Height = 10,
+                        Stroke = System.Windows.Media.Brushes.Red,
+                        StrokeThickness = 1.5,
+                        Fill = System.Windows.Media.Brushes.Red
+                    }
+                };
+
+                // Add the marker to the map
+                gmap.Markers.Add(marker);
+                Console.WriteLine(entity.ToString());
+            }
+
+            Console.WriteLine($"End of {tableName}");
+        }
+
+        private void AddMark_OnClick(object sender, RoutedEventArgs e)
+        {
+            (double Lat, double Lng) = (gmap.Position.Lat, gmap.Position.Lng);
+
+            Location location = new Location(Lat, Lng);
+            LocationDB db = new LocationDB();
+            db.Insert(location);
         }
     }
 }

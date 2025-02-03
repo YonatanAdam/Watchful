@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ViewModel;
 
 namespace Watchful
 {
@@ -41,10 +42,22 @@ namespace Watchful
                 return;
             }
 
-            // Assuming login is successful
-            // Navigate to the MapPage after a successful login
-            _mainWindow.MainFrame.Navigate(new MapPage(_mainWindow));
+            // Create an instance of UserDB
+            UserDB userDb = new UserDB();
+
+            // Validate the username and password
+            if (userDb.ValidateUser(username, password))
+            {
+                // Assuming login is successful
+                _mainWindow.MainFrame.Navigate(new MapPage(_mainWindow));
+            }
+            else
+            {
+                // Login failed
+                MessageBox.Show("Invalid username or password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
 
         private void SignUpButton_Click(object sender, RoutedEventArgs e)
         {

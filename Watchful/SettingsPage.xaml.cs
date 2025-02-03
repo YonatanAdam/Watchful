@@ -23,8 +23,11 @@ namespace Watchful
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate back to the MapPage
-            _mainWindow.MainFrame.Navigate(new MapPage(_mainWindow));
+            // Navigate back to the previous page
+            if (_mainWindow.MainFrame.NavigationService.CanGoBack)
+            {
+                _mainWindow.MainFrame.NavigationService.GoBack();
+            }
         }
     }
 }

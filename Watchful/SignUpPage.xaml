@@ -6,49 +6,159 @@
       xmlns:local="clr-namespace:Watchful"
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="1600"
-      Title="SignUpPage" Background="#FF1E1E1E">
+      Title="SignUpPage">
 
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Logo Row -->
-            <RowDefinition Height="Auto"/> <!-- Username Label -->
-            <RowDefinition Height="Auto"/> <!-- Username TextBox -->
-            <RowDefinition Height="Auto"/> <!-- Email Label -->
-            <RowDefinition Height="Auto"/> <!-- Email TextBox -->
-            <RowDefinition Height="Auto"/> <!-- Password Label -->
-            <RowDefinition Height="Auto"/> <!-- PasswordBox -->
-            <RowDefinition Height="Auto"/> <!-- Confirm Password Label -->
-            <RowDefinition Height="Auto"/> <!-- Confirm PasswordBox -->
-            <RowDefinition Height="Auto"/> <!-- Sign Up Button -->
-            <RowDefinition Height="Auto"/> <!-- Back to Login Button -->
-        </Grid.RowDefinitions>
+    <Page.Resources>
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="280"/>
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                BorderThickness="1"
+                                BorderBrush="#FF3D3D3D">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Padding="10,0"
+                                          HorizontalContentAlignment="Left"
+                                          VerticalContentAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <!-- Logo Image -->
-        <Image Grid.Row="0" Width="200" Height="200" Source="assets/watchful-logo.png" 
-               HorizontalAlignment="Center" Margin="0,0,0,10"/>
+        <Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="280"/>
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                BorderThickness="1"
+                                BorderBrush="#FF3D3D3D">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Padding="10,0"
+                                          HorizontalContentAlignment="Left"
+                                          VerticalContentAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <!-- Username Label and TextBox -->
-        <TextBlock Text="Username" Foreground="White" FontSize="14" Margin="5" Grid.Row="1" HorizontalAlignment="Left"/>
-        <TextBox x:Name="UsernameTextBox" Grid.Row="2" Width="250" Height="30"/>
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="280"/>
+            <Setter Property="Background" Value="#FF007AFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF0056B3"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
 
-        <!-- Email Label and TextBox -->
-        <TextBlock Text="Email" Foreground="White" FontSize="14" Margin="5" Grid.Row="3" HorizontalAlignment="Left"/>
-        <TextBox x:Name="EmailTextBox" Grid.Row="4" Width="250" Height="30"/>
+    <Grid>
+        <Border Background="#FF1E1E1E" 
+                CornerRadius="10" 
+                Width="340" 
+                Padding="30"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center">
+            <StackPanel Margin="15">
+                <!-- Logo -->
+                <Image Width="120" Height="120" 
+                       Source="assets/watchful-logo.png" 
+                       Margin="0,0,0,20"/>
 
-        <!-- Password Label and PasswordBox -->
-        <TextBlock Text="Password" Foreground="White" FontSize="14" Margin="5" Grid.Row="5" HorizontalAlignment="Left"/>
-        <PasswordBox x:Name="PasswordBox" Grid.Row="6" Width="250" Height="30"/>
+                <!-- Welcome Text -->
+                <TextBlock Text="Create Account" 
+                           Foreground="White" 
+                           FontSize="24" 
+                           FontWeight="SemiBold" 
+                           HorizontalAlignment="Center"/>
 
-        <!-- Confirm Password Label and PasswordBox -->
-        <TextBlock Text="Confirm Password" Foreground="White" FontSize="14" Margin="5" Grid.Row="7" HorizontalAlignment="Left"/>
-        <PasswordBox x:Name="ConfirmPasswordBox" Grid.Row="8" Width="250" Height="30"/>
+                <!-- Username -->
+                <TextBlock Text="Username" 
+                           Foreground="#FFA0A0A0" 
+                           FontSize="13" 
+                           Margin="0,0,0,5"/>
+                <TextBox x:Name="UsernameTextBox"
+                         Style="{StaticResource ModernTextBox}"/>
 
-        <!-- Sign Up Button -->
-        <Button Content="Sign Up" Grid.Row="9" Width="250" Height="35" Margin="5,10,5,5"
-                Click="SignUpButton_Click"/>
+                <!-- Email -->
+                <TextBlock Text="Email" 
+                           Foreground="#FFA0A0A0" 
+                           FontSize="13" 
+                           Margin="0,0,0,5"/>
+                <TextBox x:Name="EmailTextBox"
+                         Style="{StaticResource ModernTextBox}"/>
 
-        <!-- Back to Login Button -->
-        <Button Content="Back to Login" Grid.Row="10" Width="250" Height="35" Margin="5"
-                Click="BackToLoginButton_Click"/>
+                <!-- Password -->
+                <TextBlock Text="Password" 
+                           Foreground="#FFA0A0A0" 
+                           FontSize="13" 
+                           Margin="0,0,0,5"/>
+                <PasswordBox x:Name="PasswordBox" 
+                             Style="{StaticResource ModernPasswordBox}"/>
+
+                <!-- Confirm Password -->
+                <TextBlock Text="Confirm Password" 
+                           Foreground="#FFA0A0A0" 
+                           FontSize="13" 
+                           Margin="0,0,0,5"/>
+                <PasswordBox x:Name="ConfirmPasswordBox" 
+                             Style="{StaticResource ModernPasswordBox}"/>
+
+                <!-- Sign Up Button -->
+                <Button Content="Sign Up" 
+                        Style="{StaticResource ModernButton}"
+                        Margin="0,20,0,0"
+                        Click="SignUpButton_Click"/>
+
+                <!-- Back to Login Link -->
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            Margin="0,10,0,0">
+                    <TextBlock Text="Already have an account? " 
+                               Foreground="#FFA0A0A0" 
+                               FontSize="13"/>
+                    <TextBlock Text="Log In" 
+                               Foreground="#FF007AFF" 
+                               FontSize="13" 
+                               Cursor="Hand"
+                               MouseDown="BackToLoginButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>

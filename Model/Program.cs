@@ -1,7 +1,12 @@
-﻿namespace Model
+﻿using System;
+
+namespace Model
 {
-    public class Program
+    partial class Program
     {
-        
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello Model!");
+        }
     }
 }

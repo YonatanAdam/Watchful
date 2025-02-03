@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Model;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using ViewModel;
 
 namespace Watchful
 {
@@ -31,32 +21,53 @@ namespace Watchful
         private void SignUpButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text;
-            string email = EmailTextBox.Text;
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
 
-            // Basic validation
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) ||
-                string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
+            // Basic validation for empty fields
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
             {
                 MessageBox.Show("All fields are required.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
+            // Passwords must match
             if (password != confirmPassword)
             {
                 MessageBox.Show("Passwords do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            // Placeholder for account creation logic
-            // Here you would add the code to save the new user's information
+            // Create an instance of UserDB
+            UserDB userDb = new UserDB();
+
+            // Validate if the username already exists in the database
+            if (!userDb.ValidateNewUser(username))
+            {
+                MessageBox.Show("A user with this username already exists.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Create a new user object
+            User newUser = new User
+            {
+                Name = username,
+                Password = password // You can hash the password here for security purposes
+            };
+
+            // Insert the new user into the database
+            userDb.Insert(newUser);
+
+            // Assuming signup is successful
             MessageBox.Show("Account created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+    
+            // Save changes (to the database)
+            UserDB.SaveChanges();
 
             // Redirect to login page after successful sign-up
             _mainWindow.MainFrame.Navigate(new LoginPage(_mainWindow));
         }
-
+        
         private void BackToLoginButton_Click(object sender, RoutedEventArgs e)
         {
             // Navigate back to LoginPage

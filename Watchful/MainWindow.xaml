@@ -9,35 +9,9 @@
         Title="Watchful" Height="900" Width="1600"
         Icon="assets\watchful-logo2.ico"
         Background="#FF1E1E1E">
-    
-    
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="#FF333333"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#FF444444"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontFamily" Value="Segue UI"/>
-        </Style>
-
-        <Style TargetType="TextBox">
-            <Setter Property="Background" Value="#FF333333"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#FF444444"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontFamily" Value="Segue UI"/>
-        </Style>
-    </Window.Resources>
 
     <Grid>
-        <Frame Name="MainFrame" NavigationUIVisibility="Hidden"/>
+        <Frame Name="MainFrame" NavigationUIVisibility="Hidden" JournalOwnership="OwnsJournal"/>
     </Grid>
 </Window>
 
