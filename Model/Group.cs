@@ -1,20 +1,32 @@
-﻿namespace Model
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Model
 {
     public class Group : BaseEntity
     {
-        private Admin admin;
-        private User user;
+        private string groupName;
+        private string passCode;
+        private User admin;
+        private UserList members;
 
-        public Admin Admin
+
+        public string GroupName
         {
+            get { return groupName; }
+            set { groupName = value; }
+        }
+
+        public User Admin
+        { 
             get { return admin; }
-            set { admin = value; }
+            set {  admin = value; }
         }
 
-        public User User
-        {
-            get { return user; }
-            set { user = value; }
-        }
+        public UserList Members { get => members; set => members = value; }
+        public string PassCode { get => passCode; set => passCode = value; }
     }
 }

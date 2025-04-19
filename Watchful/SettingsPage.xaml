@@ -12,6 +12,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Page Title -->
@@ -29,8 +30,20 @@
             <CheckBox x:Name="NotificationsCheckBox" Margin="10,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
 
+        <StackPanel Margin="20" Grid.Row="3">
+            <TextBlock Text="Set Current Location" Foreground="White" FontSize="18" FontWeight="Bold" />
+        
+            <TextBlock Text="Latitude:" Foreground="White" />
+            <TextBox x:Name="LatitudeTextBox" Width="200" />
+
+            <TextBlock Text="Longitude:" Foreground="White"/>
+            <TextBox x:Name="LongitudeTextBox" Width="200" />
+
+            <Button Content="Save Location" Width="150" Click="SaveLocation_Click" Margin="10" />
+        </StackPanel>
+
         <!-- Back Button -->
-        <Button Content="Back" Grid.Row="3" Width="100" Height="35" Margin="10"
+        <Button Content="Back" Grid.Row="4" Width="100" Height="35" Margin="10"
                 HorizontalAlignment="Center" Click="BackButton_Click"/>
     </Grid>
 </Page>

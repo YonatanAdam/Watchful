@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using ViewModel;
 
 namespace Watchful
 {
@@ -19,6 +20,8 @@ namespace Watchful
             // Load existing settings (placeholder logic)
             DarkThemeCheckBox.IsChecked = true; // Assume dark theme is enabled by default
             NotificationsCheckBox.IsChecked = false; // Assume notifications are disabled by default
+            LatitudeTextBox.Text = "";
+            LongitudeTextBox.Text = "";
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -29,5 +32,31 @@ namespace Watchful
                 _mainWindow.MainFrame.NavigationService.GoBack();
             }
         }
+
+        private void SaveLocation_Click(object sender, RoutedEventArgs e)
+        {
+            if (double.TryParse(LatitudeTextBox.Text, out double lat) && double.TryParse(LongitudeTextBox.Text, out double lon))
+            {
+                UserDB userDb = new UserDB();
+                int currentUserId = MainWindow.CurrentUser.Id;
+                bool success = userDb.UpdateUserLocation(currentUserId, lat, lon);
+                _ = BaseDB.SaveChanges();
+
+                if (success)
+                {
+                    MessageBox.Show("Location updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                }
+                else
+                {
+                    MessageBox.Show("Failed to update location.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Invalid latitude or longitude values.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
     }
 }

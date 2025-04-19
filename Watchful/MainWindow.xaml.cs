@@ -1,13 +1,5 @@
-﻿using GMap.NET.MapProviders;
-using GMap.NET.WindowsPresentation;
-using GMap.NET;
+﻿using Model;
 using System.Windows;
-using System.Net;
-using System;
-using System.Windows.Input;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using System.Windows.Navigation;
 
 namespace Watchful
 {
@@ -16,8 +8,10 @@ namespace Watchful
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Current logged in user
+        public static User CurrentUser { get; set; }
+        public static Group CurrentGroup { get; set; } // Not sure if this is needed
 
-        // private DispatcherTimer _zoomUpdateTimer;
 
         public MainWindow()
         {

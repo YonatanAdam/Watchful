@@ -7,28 +7,29 @@ namespace ViewModel
     {
         static void Main(string[] args)
         {
-            var userDb = new UserDB();
+            var db = new GroupDB();
+            var udb =new UserDB();
 
-            User newUser = new User
+            var entities = db.Select("GroupTbl");
+            User admin = udb.GetUserById(4);
+
+            Group group = new Group
             {
-                Name = "segev2",
-                Password = "dahan"
+                GroupName = "Shteiman",
+                Admin = admin
             };
-            
-            userDb.Insert(newUser);
-            int recordsAffected = BaseDB.SaveChanges();
-            
-            var entities = userDb.Select("UserTbl");
-            
-            
+
+            db.Insert(group);
+
             foreach (var e in entities)
             {
                 Console.WriteLine($"(ID: {e.Id}) -> {e.ToString()}");
-                // userDb.Delete(e);
             }
-            
-            Console.WriteLine($"{recordsAffected} record(s) inserted.");
-            Console.WriteLine("End of UserTbl");
+
+            int changes = BaseDB.SaveChanges();
+
+            Console.WriteLine("End of LocationTbl");
+            Console.WriteLine("Changes: " + changes);
 
         }
     }

@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="BaseDB.cs" />
     <Compile Include="ChangeEntity.cs" />
+    <Compile Include="GroupDB.cs" />
     <Compile Include="LocationDB.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +62,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="testDesign1.accdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Watchful2DB.accdb" />
     <Content Include="WatchfulDB.accdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

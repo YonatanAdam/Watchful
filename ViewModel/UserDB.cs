@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ViewModel
@@ -15,14 +17,12 @@ namespace ViewModel
             if (entity is User user)
             {
                 inserted.Add(new ChangeEntity(this.CreateInsertSQL, entity));
-                // inserted.Add(new ChangeEntity(base.CreateInsertSQL, entity));
             }
         }
         public override void Delete(BaseEntity entity)
         {
             if (entity is User user)
             {
-                // deleted.Add(new ChangeEntity(base.CreateDeleteSQL, entity));
                 deleted.Add(new ChangeEntity(this.CreateDeleteSQL, entity));
             }
         }
@@ -30,7 +30,6 @@ namespace ViewModel
         {
             if (entity is User user)
             {
-                // updated.Add(new ChangeEntity(base.CreateUpdateSQL, entity));
                 updated.Add(new ChangeEntity(this.CreateUpdateSQL, entity));
             }
         }
@@ -48,7 +47,7 @@ namespace ViewModel
             User user = entity as User;
             string sqlStr = $"UPDATE UserTbl SET UserName = '{user.Name}'," +
                             $"Password='{user.Password}'" +
-                            $"WHERE UserID={user.Id}";
+                            $"WHERE ID={user.Id}";
             return sqlStr;
         }
 
@@ -56,7 +55,7 @@ namespace ViewModel
         {
             User user = entity as User;
             StringBuilder sql_builder = new StringBuilder();
-            sql_builder.AppendFormat("DELETE FROM UserTbl WHERE UserID = {0}", user.Id);
+            sql_builder.AppendFormat("DELETE FROM UserTbl WHERE ID = {0}", user.Id);
             return sql_builder.ToString();
         }
 
@@ -68,7 +67,7 @@ namespace ViewModel
         protected override BaseEntity CreateModel(BaseEntity entity)
         {
             User userEntity = (User)entity;
-            userEntity.Id = Convert.ToInt32(reader["UserId"]);
+            userEntity.Id = Convert.ToInt32(reader["ID"]);
             userEntity.Name = Convert.ToString(reader["UserName"]);
             userEntity.Password = Convert.ToString(reader["Password"]);
             return userEntity;
@@ -110,35 +109,43 @@ namespace ViewModel
 
             return isValid;
         }
-
-
-        public bool ValidateUser(string username, string password)
+        public User Login(string username, string password)
         {
-            bool isValid = false;
+            string sqlstmt = $"SELECT ID, UserName, Admin, [Password], Latitude, Longitude FROM  UserTbl WHERE (UserName = '{username}') AND ([Password] = '{password}')";
 
+            this.command.CommandText = sqlstmt;
+
+            UserList list = new UserList(Select());
+
+            if (list.Count > 0)
+                return list[0];
+
+            return null;
+        }
+        
+        public bool UpdateUserLocation(int userId, double latitude, double longitude)
+        {
             try
             {
-                string query = "SELECT COUNT(*) FROM UserTbl WHERE UserName = ? AND Password = ?"; // Use parameters to prevent SQL injection
+                string query = "UPDATE UserTbl SET Latitude = ?, Longitude = ? WHERE ID = ?";
 
-                OleDbCommand cmd = new OleDbCommand(query, connection);
-
-                // Add parameters for username and password
-                cmd.Parameters.AddWithValue("?", username);
-                cmd.Parameters.AddWithValue("?", password);
-
-                connection.Open();
-
-                // Execute the query and check if any rows are returned
-                int result = (int)cmd.ExecuteScalar();
-
-                if (result > 0)
+                using (OleDbCommand cmd = new OleDbCommand(query, connection))
                 {
-                    isValid = true;  // User exists with correct username and password
+                    cmd.Parameters.AddWithValue("?", latitude);
+                    cmd.Parameters.AddWithValue("?", longitude);
+                    cmd.Parameters.AddWithValue("?", userId);
+
+                    connection.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    _ = BaseDB.SaveChanges();
+
+                    return rowsAffected > 0; // Returns true if at least one row was updated
                 }
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine($"Error: {e.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error updating location: {e.Message}");
+                return false;
             }
             finally
             {
@@ -147,8 +154,65 @@ namespace ViewModel
                     connection.Close();
                 }
             }
+        }
 
-            return isValid;
+        public Location SelectUserLocation(string tableName, int userId)
+        {
+            try
+            {
+                string query = $"SELECT Latitude, Longitude FROM {tableName} WHERE ID = ?";
+                using (OleDbCommand cmd = new OleDbCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("?", userId);
+                    connection.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    _ = BaseDB.SaveChanges();
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            double latitude = reader.GetDouble(0);
+                            double longitude = reader.GetDouble(1);
+                            return new Location
+                            {
+                                Latitude = latitude,
+                                Longitude = longitude
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error fetching location: {e.Message}");
+            }
+            return null;
+        }
+        public User GetUserById(int userId)
+        {
+            string sqlstmt = $"SELECT ID, UserName, Admin, [Password], Latitude, Longitude FROM  UserTbl WHERE (ID = {userId})";
+
+            this.command.CommandText = sqlstmt;
+
+            UserList list = new UserList(Select());
+
+            if (list.Count > 0)
+                return list[0];
+
+            return null;
+        }
+
+        public UserList SelectUsersByGroupId(int groupID)
+        {
+            string sqlstmt = $"SELECT  UserTbl.ID, UserTbl.UserName, UserTbl.Admin, UserTbl.[Password], UserTbl.Latitude, UserTbl.Longitude\r\nFROM            (UserTbl INNER JOIN\r\n                         GroupMembersTbl ON UserTbl.ID = GroupMembersTbl.UserID)\r\nWHERE        (GroupMembersTbl.GroupID = {groupID})";
+
+            this.command.CommandText = sqlstmt;
+
+            UserList list = new UserList(Select());
+
+            return list;
         }
     }
 }

@@ -48,23 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin.cs" />
-    <Compile Include="AgeGroup.cs" />
     <Compile Include="BaseEntity.cs" />
-    <Compile Include="Category.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="Location.cs" />
+    <Compile Include="GroupList.cs" />
     <Compile Include="LocationList.cs" />
-    <Compile Include="NavHistory.cs" />
-    <Compile Include="NavHistoryList.cs" />
-    <Compile Include="NavigationType.cs" />
-    <Compile Include="POI.cs" />
-    <Compile Include="POIList.cs" />
+    <Compile Include="UserList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs" />
-    <Compile Include="UserPreferences.cs" />
-    <Compile Include="UserType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

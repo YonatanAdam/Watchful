@@ -38,16 +38,12 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Map Type ComboBox -->
-            <ComboBox x:Name="mapTypeBox" Margin="5" Grid.Column="0" MaxWidth="300" SelectionChanged="MapTypeBox_SelectionChanged">
-                <ComboBoxItem Content="GoogleMap" Tag="GoogleMap"/>
-                <ComboBoxItem Content="GoogleSatellite" Tag="GoogleSatellite"/>
-                <ComboBoxItem Content="BingMap" Tag="BingMap"/>
-                <ComboBoxItem Content="OpenStreetMap" Tag="OpenStreetMap"/>
-            </ComboBox>
+            <ComboBox x:Name="groupSelector" Margin="5" Grid.Column="0" MaxWidth="300" SelectionChanged="GroupSelector_SelectionChanged"
+                      DisplayMemberPath="GroupName" SelectedValuePath="Id"/>
 
-            <!-- Clear Marks Button -->
-            <Button x:Name="clearMarks" Grid.Column="1" Margin="5" Content="Clear Marks" Click="ClearMarks_Click"/>
+
+            <Button x:Name="groupButton" Grid.Column="1" Margin="5,5,5,0" Content="Create or Join Group" Click="GroupButton_Click" Height="25" VerticalAlignment="Top"/>
+
             <!--Load Marks from DB -->
             <Button x:Name="LoadMarks" Grid.Column="4" Margin="5" Content="Load Marks" Click="LoadMarks_OnClick"/>
             <!--Add Mark to DB -->

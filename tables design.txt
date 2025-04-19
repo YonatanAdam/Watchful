@@ -1,0 +1,31 @@
+Users
+	id
+	....
+	Admin
+
+Group/Family
+	id
+	GroupName
+	adminId
+
+GroupMembers
+	id
+	GroupId
+	userId
+
+Locations
+	id
+	GroupId
+	Longtitude
+	Latitude
+
+GroupRules
+	id
+	...
+
+
+Notifications
+	id
+	...
+
+

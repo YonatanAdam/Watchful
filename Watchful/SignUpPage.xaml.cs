@@ -23,6 +23,7 @@ namespace Watchful
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
+            bool admin = false;
 
             // Basic validation for empty fields
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
@@ -38,6 +39,9 @@ namespace Watchful
                 return;
             }
 
+            admin = true;
+
+
             // Create an instance of UserDB
             UserDB userDb = new UserDB();
 
@@ -52,26 +56,48 @@ namespace Watchful
             User newUser = new User
             {
                 Name = username,
-                Password = password // You can hash the password here for security purposes
+                Password = password, // You can hash the password here for security purposes
+                Admin = admin
             };
+
+
+
+
 
             // Insert the new user into the database
             userDb.Insert(newUser);
 
             // Assuming signup is successful
             MessageBox.Show("Account created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-    
+
             // Save changes (to the database)
             UserDB.SaveChanges();
 
             // Redirect to login page after successful sign-up
             _mainWindow.MainFrame.Navigate(new LoginPage(_mainWindow));
         }
-        
+
         private void BackToLoginButton_Click(object sender, RoutedEventArgs e)
         {
             // Navigate back to LoginPage
             _mainWindow.MainFrame.Navigate(new LoginPage(_mainWindow));
+        }
+
+        private void UserTypeRadio_Checked(object sender, RoutedEventArgs e)
+        {
+            /*            if (GroupCodePanel == null || GroupNamePanel == null)
+                            return; // Controls not initialized yet
+
+                        if (RegularUserRadio.IsChecked == true)
+                        {
+                            GroupCodePanel.Visibility = Visibility.Visible;
+                            GroupNamePanel.Visibility = Visibility.Collapsed;
+                        }
+                        else if (AdminRadio.IsChecked == true)
+                        {
+                            GroupCodePanel.Visibility = Visibility.Collapsed;
+                            GroupNamePanel.Visibility = Visibility.Visible;
+                        }*/
         }
     }
 }

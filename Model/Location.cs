@@ -4,11 +4,13 @@ namespace Model
 {
     public class Location : BaseEntity
     {
+        private int userId;
         private double latitude;
         private double longitude;
         
         public double Latitude { get => latitude; set => latitude = value; } // TODO: Logic for setting a coordinate to make sure it is on the map!.
         public double Longitude { get => longitude; set => longitude = value; }
+        public int UserId { get => userId; set => userId = value; }
 
         public override string ToString()
         {

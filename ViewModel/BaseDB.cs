@@ -18,7 +18,7 @@ namespace ViewModel
         protected static List<ChangeEntity> inserted = new List<ChangeEntity>();
         protected static List<ChangeEntity> deleted = new List<ChangeEntity>();
         protected static List<ChangeEntity> updated = new List<ChangeEntity>();
-        
+
         protected virtual string CreateInsertSQL(BaseEntity entity)
         {
             throw new NotImplementedException();
@@ -35,7 +35,7 @@ namespace ViewModel
         }
 
         protected abstract BaseEntity newEntity();
-        
+
         protected abstract BaseEntity CreateModel(BaseEntity entity);
 
         //private static string Path()
@@ -71,7 +71,7 @@ namespace ViewModel
             {
                 //string dbPath = GetDbPath();
                 //connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + dbPath + ";Persist Security Info=True";
-                connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=D:\Watchful\ViewModel\Watchful2DB.accdb;Persist Security Info=True";
+                connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=D:\Watchful\ViewModel\testDesign1.accdb;Persist Security Info=True";
             }
 
             connection = new OleDbConnection(connectionString);
@@ -111,7 +111,7 @@ namespace ViewModel
             }
             return list;
         }
-        
+
         public List<BaseEntity> Select(string tableName)
         {
             List<BaseEntity> list = new List<BaseEntity>();
@@ -120,7 +120,7 @@ namespace ViewModel
             {
                 command.Connection = connection;
                 connection.Open();
-        
+
                 // Set the SQL query to select all from the given table
                 command.CommandText = $"SELECT * FROM {tableName}";  // Use tableName as input
 
@@ -151,15 +151,15 @@ namespace ViewModel
         }
 
 
-        
+
         public static int SaveChanges()
         {
             int records_affected = 0;
-            OleDbCommand cmd = new OleDbCommand(); 
+            OleDbCommand cmd = new OleDbCommand();
             OleDbConnection connection = new OleDbConnection(connectionString);
             try
             {
-               
+
                 cmd.Connection = connection;
                 connection.Open();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,11 +45,21 @@ namespace Watchful
 
             // Create an instance of UserDB
             UserDB userDb = new UserDB();
-
             // Validate the username and password
-            if (userDb.ValidateUser(username, password))
+            User user = userDb.Login(username, password);
+
+            if (user !=null)
             {
                 // Assuming login is successful
+                MainWindow.CurrentUser = user;
+
+                GroupDB db = new GroupDB();
+
+                if (db.AdminHasGroup(MainWindow.CurrentUser.Id))
+                {
+                    // do things
+                }
+
                 _mainWindow.MainFrame.Navigate(new MapPage(_mainWindow));
             }
             else
