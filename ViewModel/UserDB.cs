@@ -111,7 +111,7 @@ namespace ViewModel
         }
         public User Login(string username, string password)
         {
-            string sqlstmt = $"SELECT ID, UserName, Admin, [Password], Latitude, Longitude FROM  UserTbl WHERE (UserName = '{username}') AND ([Password] = '{password}')";
+            string sqlstmt = $"SELECT ID, UserName, [Password], Latitude, Longitude FROM  UserTbl WHERE (UserName = '{username}') AND ([Password] = '{password}')";
 
             this.command.CommandText = sqlstmt;
 
@@ -122,7 +122,7 @@ namespace ViewModel
 
             return null;
         }
-        
+
         public bool UpdateUserLocation(int userId, double latitude, double longitude)
         {
             try
@@ -192,7 +192,7 @@ namespace ViewModel
         }
         public User GetUserById(int userId)
         {
-            string sqlstmt = $"SELECT ID, UserName, Admin, [Password], Latitude, Longitude FROM  UserTbl WHERE (ID = {userId})";
+            string sqlstmt = $"SELECT ID, UserName , [Password], Latitude, Longitude FROM  UserTbl WHERE (ID = {userId})";
 
             this.command.CommandText = sqlstmt;
 
@@ -206,13 +206,31 @@ namespace ViewModel
 
         public UserList SelectUsersByGroupId(int groupID)
         {
-            string sqlstmt = $"SELECT  UserTbl.ID, UserTbl.UserName, UserTbl.Admin, UserTbl.[Password], UserTbl.Latitude, UserTbl.Longitude\r\nFROM            (UserTbl INNER JOIN\r\n                         GroupMembersTbl ON UserTbl.ID = GroupMembersTbl.UserID)\r\nWHERE        (GroupMembersTbl.GroupID = {groupID})";
+            string sqlstmt = $"SELECT  UserTbl.ID, UserTbl.UserName, UserTbl.[Password], UserTbl.Latitude, UserTbl.Longitude\r\nFROM            (UserTbl INNER JOIN\r\n                         GroupMembersTbl ON UserTbl.ID = GroupMembersTbl.UserID)\r\nWHERE        (GroupMembersTbl.GroupID = {groupID})";
 
             this.command.CommandText = sqlstmt;
 
             UserList list = new UserList(Select());
 
             return list;
+        }
+
+        public UserList GetAllUsersByGroupId(int groupId)
+        {
+            // SQL query to join GroupMembersTbl and UserTbl to fetch user details for a specific group
+            string sqlqry = $@"
+        SELECT UserTbl.ID, UserTbl.UserName, UserTbl.[Password], UserTbl.Latitude, UserTbl.Longitude
+        FROM GroupMembersTbl
+        INNER JOIN UserTbl ON GroupMembersTbl.UserID = UserTbl.ID
+        WHERE GroupMembersTbl.GroupID = {groupId}";
+
+            // Set the command text to the SQL query
+            this.command.CommandText = sqlqry;
+
+            // Execute the query and convert the result to a UserList
+            UserList users = new UserList(Select());
+
+            return users;
         }
     }
 }

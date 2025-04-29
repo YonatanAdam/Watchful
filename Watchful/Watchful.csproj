@@ -260,6 +260,12 @@
     <Compile Include="GroupCreationPage.xaml.cs">
       <DependentUpon>GroupCreationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GroupMembersWindow.xaml.cs">
+      <DependentUpon>GroupMembersWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ModifyMemberWindow.xaml.cs">
+      <DependentUpon>ModifyMemberWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
@@ -270,6 +276,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GroupMembersWindow.xaml" />
     <Page Include="LoginPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -290,6 +297,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MapPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ModifyMemberWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

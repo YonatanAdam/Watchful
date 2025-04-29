@@ -174,7 +174,7 @@ namespace ViewModel
             }
         }
 
-        public Group GetGroupByNameAndPass(string name,string pass)
+        public Group GetGroupByNameAndPass(string name, string pass)
         {
             string sqlstr = $"SELECT ID, GroupName, AdminID, Passcode FROM GroupTbl WHERE (GroupName = '{name}') AND (Passcode = '{pass}')";
 
@@ -205,7 +205,35 @@ namespace ViewModel
             this.command.CommandText = sqlstr;
             int rowsAffected = this.command.ExecuteNonQuery();
             return rowsAffected > 0;
-            
+
+        }
+
+        public Group GetGroupById(int groupId)
+        {
+            string sqlstr = $"SELECT ID, GroupName, AdminID, Passcode FROM GroupTbl WHERE (ID = {groupId})";
+            this.command.CommandText = sqlstr;
+            GroupList groups = new GroupList(Select());
+            if (groups.Count > 0)
+                return groups[0];
+            return null;
+        }
+
+        public UserList GetUsersByGroup(int groupId)
+        {
+            // SQL query to join GroupMembersTbl and UserTbl to fetch user details for a specific group
+            string sqlstr = @"
+                SELECT UserTbl.ID, UserTbl.UserName, UserTbl.[Password], UserTbl.Latitude, UserTbl.Longitude
+                FROM GroupMembersTbl
+                INNER JOIN UserTbl ON GroupMembersTbl.UserID = UserTbl.ID
+                WHERE GroupMembersTbl.GroupID = @GroupId";
+
+            // Set the command text to the SQL query
+            this.command.CommandText = sqlstr;
+
+            // Execute the query and convert the result to a UserList
+            UserList users = new UserList(Select());
+
+            return users;
         }
     }
 }

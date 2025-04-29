@@ -7,20 +7,19 @@ namespace ViewModel
     {
         static void Main(string[] args)
         {
-            var db = new GroupDB();
-            var udb =new UserDB();
+            GroupDB groupDB = new GroupDB();
+            UserDB userDB = new UserDB();
 
-            var entities = db.Select("GroupTbl");
+            // Replace with a valid group ID from your database
+            int testGroupId = 7;
 
-            foreach (var e in entities)
+            UserList users = userDB.SelectUsersByGroupId(testGroupId);
+
+            Console.WriteLine($"Users in Group ID {testGroupId}:");
+            foreach (User user in users)
             {
-                Console.WriteLine($"(ID: {e.Id}) -> {e.ToString()}");
-                db.Delete(e);
+                Console.WriteLine($"- {user.Name} (ID: {user.Id})");
             }
-
-            int changes = BaseDB.SaveChanges();
-
-            Console.WriteLine("Changes: " + changes);
 
         }
     }

@@ -1,0 +1,99 @@
+﻿<Window x:Class="Watchful.GroupMembersWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Group Members" Height="450" Width="800"
+        Background="#FF1E1E1E"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <!-- Reuse styles -->
+        <Style x:Key="ModernLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style x:Key="ModernDataGrid" TargetType="DataGrid">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="RowBackground" Value="#FF2D2D2D"/>
+            <Setter Property="AlternatingRowBackground" Value="#FF3D3D3D"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FF3D3D3D"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Padding" Value="8"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Background" Value="#FF007AFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF0056B3"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <!-- Group Name -->
+        <TextBlock Text="Group Name:" FontWeight="Bold" 
+                   Style="{StaticResource ModernLabel}"
+                   Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock x:Name="GroupNameText" Margin="110,0,0,0"
+                   HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Style="{StaticResource ModernLabel}" Foreground="#FFA0A0A0"/>
+
+        <!-- Admin Name -->
+        <TextBlock Text="Admin:" FontWeight="Bold" 
+                   Style="{StaticResource ModernLabel}"
+                   Margin="0,30,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock x:Name="AdminNameText" Margin="110,30,0,0"
+                   HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Style="{StaticResource ModernLabel}" Foreground="#FFA0A0A0"/>
+
+        <!-- Members Table -->
+        <DataGrid x:Name="MembersTable" Margin="0,70,0,50"
+                  Style="{StaticResource ModernDataGrid}" 
+                  AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="200"/>
+                <DataGridTextColumn Header="Latitude" Binding="{Binding Latitude}" Width="100"/>
+                <DataGridTextColumn Header="Longitude" Binding="{Binding Longitude}" Width="100"/>
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Modify User" Click="ModifyUser_Click"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+
+        <!-- Close Button -->
+        <Button Content="Close" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Style="{StaticResource ModernButton}" Click="CloseButton_Click"/>
+    </Grid>
+</Window>

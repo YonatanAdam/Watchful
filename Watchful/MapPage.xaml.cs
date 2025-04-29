@@ -294,8 +294,8 @@ namespace Watchful
             }
 
             // Create and show the members list window
-            GroupMembersWindow membersWindow = new GroupMembersWindow(selectedGroup.Id);
-            membersWindow.Owner = this; // Set the owner to current window
+            GroupMembersWindow membersWindow = new GroupMembersWindow(SelectedGroup.Id);
+            membersWindow.Owner = _mainWindow; // Set the owner to current window
             membersWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             membersWindow.ShowDialog(); // Show as modal dialog
         }
