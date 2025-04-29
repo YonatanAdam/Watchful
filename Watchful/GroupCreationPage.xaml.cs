@@ -42,23 +42,52 @@ namespace Watchful
                 return;
             }
 
-            // Create an instance of GroupDB
-            GroupDB groupDB = new GroupDB();
-            // Validate the details
-            Group group = groupDB.CreateGroup(GroupName, PassCode, MainWindow.CurrentUser);
-
-            if (group != null)
+            if (JoinModeRadio.IsChecked == true)
             {
-                // Assuming login is successful
-                MainWindow.CurrentGroup = group;
+                // join mode
+                // Create an instance of GroupDB
+                GroupDB groupDB = new GroupDB();
+                Group group = groupDB.GetGroupByNameAndPass(GroupName, PassCode);
+                if (group == null)
+                {
+                    MessageBox.Show($"Group {GroupName} was not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
-                _mainWindow.MainFrame.Navigate(new MapPage(_mainWindow));
+                bool added = groupDB.AddUserById(group.Id, MainWindow.CurrentUser.Id);
+                if(added)
+                {
+                    MessageBox.Show($"Successfully joined: {GroupName}.", "Success!", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _mainWindow.MainFrame.Navigate(new MapPage(_mainWindow));
+                } else
+                {
+                    MessageBox.Show($"There was an error entering {GroupName}.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
             }
-            else
+            else if (CreateModeRadio.IsChecked==true)
             {
-                // Login failed
-                MessageBox.Show("Invalid group passcode.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                // create mode
+                // Create an instance of GroupDB
+                GroupDB groupDB = new GroupDB();
+                // Validate the details
+                Group group = groupDB.CreateGroup(GroupName, PassCode, MainWindow.CurrentUser);
+
+                if (group != null)
+                {
+                    // Assuming login is successful
+                    MainWindow.CurrentGroup = group;
+
+                    _mainWindow.MainFrame.Navigate(new MapPage(_mainWindow));
+                }
+                else
+                {
+                    // Login failed
+                    MessageBox.Show("Invalid group passcode.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
+
+
         }
 
         private void ModeRadio_Checked(object sender, RoutedEventArgs e)

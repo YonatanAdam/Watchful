@@ -1,6 +1,9 @@
 ﻿using Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace ViewModel
@@ -115,7 +118,7 @@ namespace ViewModel
             return null;
         }
 
-        public GroupList GetGroupsForUser(int userId)
+        public GroupList GetGroupsForUserAsMember(int userId)
         {
             string sqlstr = $"SELECT GroupTbl.ID, GroupTbl.GroupName, GroupTbl.AdminID, GroupTbl.Passcode FROM GroupTbl INNER JOIN GroupMembersTbl ON GroupTbl.ID = GroupMembersTbl.GroupID WHERE GroupMembersTbl.UserID = {userId};";
 
@@ -124,6 +127,85 @@ namespace ViewModel
             GroupList groups = new GroupList(Select());
 
             return groups;
+        }
+
+        public GroupList GetGroupsForUserAsAdmin(int adminId)
+        {
+            string sqlstr = $"SELECT ID, GroupName, AdminID, Passcode FROM GroupTbl WHERE (AdminID = {adminId})";
+
+            this.command.CommandText = sqlstr;
+
+            GroupList groups = new GroupList(Select());
+
+            return groups;
+        }
+
+        public GroupList GetAllGroupsForUser(int userId)
+        {
+            // Create a new group list to hold the combined results
+            GroupList allGroups = new GroupList();
+
+            try
+            {
+                // Get groups where user is a member
+                GroupList memberGroups = GetGroupsForUserAsMember(userId);
+                foreach (Group group in memberGroups)
+                {
+                    allGroups.Add(group);
+                }
+
+                // Get groups where user is an admin
+                GroupList adminGroups = GetGroupsForUserAsAdmin(userId);
+                foreach (Group group in adminGroups)
+                {
+                    // Avoid adding duplicates (in case a user is both member and admin of a group)
+                    if (!allGroups.Contains(group))
+                    {
+                        allGroups.Add(group);
+                    }
+                }
+
+                return allGroups;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting all groups for user: {ex.Message}");
+                return allGroups; // Return whatever we've collected so far
+            }
+        }
+
+        public Group GetGroupByNameAndPass(string name,string pass)
+        {
+            string sqlstr = $"SELECT ID, GroupName, AdminID, Passcode FROM GroupTbl WHERE (GroupName = '{name}') AND (Passcode = '{pass}')";
+
+            this.command.CommandText = sqlstr;
+
+            GroupList groups = new GroupList(Select());
+
+            if (groups.Count > 0)
+                return groups[0];
+
+            return null;
+        }
+
+        public bool AddUserById(int groupId, int userId)
+        {
+            if (this.connection.State != ConnectionState.Open)
+            {
+                this.connection.Open();
+            }
+
+            string sqlstr = $"SELECT COUNT(*) FROM GroupMembersTbl WHERE (UserID = {userId}) AND (GroupID = {groupId})";
+            this.command.CommandText = sqlstr;
+            int count = Convert.ToInt32(this.command.ExecuteScalar());
+
+            if (count > 0) return true;
+
+            sqlstr = $"INSERT INTO GroupMembersTbl (GroupID, UserID) VALUES ({groupId}, {userId})";
+            this.command.CommandText = sqlstr;
+            int rowsAffected = this.command.ExecuteNonQuery();
+            return rowsAffected > 0;
+            
         }
     }
 }

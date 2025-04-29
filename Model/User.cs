@@ -6,7 +6,6 @@ namespace Model
     public class User : BaseEntity
     {
         private string name;
-        private bool admin;
         private string password;
 
         private double latitude;
@@ -40,12 +39,6 @@ namespace Model
         {
             get { return password; }
             set { password = value; }
-        }
-
-        public bool Admin
-        {
-            get { return admin; }
-            set { admin = value; }
         }
 
     }

@@ -23,7 +23,6 @@ namespace Watchful
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
-            bool admin = false;
 
             // Basic validation for empty fields
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
@@ -38,9 +37,6 @@ namespace Watchful
                 MessageBox.Show("Passwords do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
-            admin = true;
-
 
             // Create an instance of UserDB
             UserDB userDb = new UserDB();
@@ -57,12 +53,7 @@ namespace Watchful
             {
                 Name = username,
                 Password = password, // You can hash the password here for security purposes
-                Admin = admin
             };
-
-
-
-
 
             // Insert the new user into the database
             userDb.Insert(newUser);

@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using ViewModel;
 using Location = Model.Location;
+using Model;
 
 namespace Watchful
 {
@@ -36,7 +37,7 @@ namespace Watchful
             GroupDB groupDB = new GroupDB();
 
             // Get the list of groups that the current user is in
-            var groups = groupDB.GetGroupsForUser(MainWindow.CurrentUser.Id);
+            var groups = groupDB.GetAllGroupsForUser(MainWindow.CurrentUser.Id);
 
             // Set the ComboBox ItemsSource to the groups list
             groupSelector.ItemsSource = groups;
@@ -279,6 +280,24 @@ namespace Watchful
             Location location = new Location(Lat, Lng);
             LocationDB db = new LocationDB();
             db.Insert(location);
+        }
+
+        private void listMembers_Click(object sender, RoutedEventArgs e)
+        {
+            Group SelectedGroup = groupSelector.SelectedItem as Group;
+
+            if (SelectedGroup == null)
+            {
+                MessageBox.Show("Please select a group first.", "No Group Selected",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // Create and show the members list window
+            GroupMembersWindow membersWindow = new GroupMembersWindow(selectedGroup.Id);
+            membersWindow.Owner = this; // Set the owner to current window
+            membersWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            membersWindow.ShowDialog(); // Show as modal dialog
         }
     }
 }

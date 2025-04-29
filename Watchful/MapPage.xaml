@@ -36,6 +36,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
             <ComboBox x:Name="groupSelector" Margin="5" Grid.Column="0" MaxWidth="300" SelectionChanged="GroupSelector_SelectionChanged"
@@ -43,6 +44,7 @@
 
 
             <Button x:Name="groupButton" Grid.Column="1" Margin="5,5,5,0" Content="Create or Join Group" Click="GroupButton_Click" Height="25" VerticalAlignment="Top"/>
+            <Button x:Name="listMembers" Grid.Column="6" Margin="5,5,5,0" Content="List Members" Height="25" VerticalAlignment="Top" Click="listMembers_Click"/>
 
             <!--Load Marks from DB -->
             <Button x:Name="LoadMarks" Grid.Column="4" Margin="5" Content="Load Marks" Click="LoadMarks_OnClick"/>

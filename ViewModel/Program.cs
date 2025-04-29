@@ -11,24 +11,15 @@ namespace ViewModel
             var udb =new UserDB();
 
             var entities = db.Select("GroupTbl");
-            User admin = udb.GetUserById(4);
-
-            Group group = new Group
-            {
-                GroupName = "Shteiman",
-                Admin = admin
-            };
-
-            db.Insert(group);
 
             foreach (var e in entities)
             {
                 Console.WriteLine($"(ID: {e.Id}) -> {e.ToString()}");
+                db.Delete(e);
             }
 
             int changes = BaseDB.SaveChanges();
 
-            Console.WriteLine("End of LocationTbl");
             Console.WriteLine("Changes: " + changes);
 
         }
