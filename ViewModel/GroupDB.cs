@@ -218,6 +218,16 @@ namespace ViewModel
             return null;
         }
 
+        public Group GetGroupByName(string name)
+        {
+            string sqlstr = $"SELECT ID, GroupName, AdminID, Passcode FROM GroupTbl WHERE (GroupName = {name})";
+            this.command.CommandText = sqlstr;
+            GroupList groups = new GroupList(Select());
+            if (groups.Count > 0)
+                return groups[0];
+            return null;
+        }
+
         public UserList GetUsersByGroup(int groupId)
         {
             // SQL query to join GroupMembersTbl and UserTbl to fetch user details for a specific group
@@ -235,5 +245,6 @@ namespace ViewModel
 
             return users;
         }
+
     }
 }

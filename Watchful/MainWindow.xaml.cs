@@ -1,5 +1,6 @@
 ﻿using Model;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace Watchful
 {
@@ -16,7 +17,18 @@ namespace Watchful
         public MainWindow()
         {
             InitializeComponent();
+            // Attach handler for navigation event
+            MainFrame.NavigationService.Navigated += NavigationService_Navigated;
             MainFrame.Navigate(new LoginPage(this));
         }
+
+        private void NavigationService_Navigated(object sender, NavigationEventArgs e)
+        {
+            if (e.Content is MapPage mapPage)
+            {
+                mapPage.ShowUsersOnMap();
+            }
+        }
+
     }
 }

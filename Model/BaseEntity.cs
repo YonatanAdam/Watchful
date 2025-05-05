@@ -8,5 +8,10 @@
             get { return id; }
             set { id = value; }
         }
+
+        public override string ToString()
+        {
+            return $"ID: {this.id} ";
+        }
     }
 }

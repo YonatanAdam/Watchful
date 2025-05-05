@@ -13,10 +13,9 @@ namespace Model
 
         public override string ToString()
         {
-            return $"(ID: {Id}) -> Name: {name}, Password: {password}";
+            return base.ToString() + $"Name: {name}, Password: {password}";
         }
 
-        //test
         public double Latitude
         {
             get { return latitude; }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Model;
+using System.Windows;
 using System.Windows.Controls;
 using ViewModel;
 
@@ -38,12 +39,23 @@ namespace Watchful
             if (double.TryParse(LatitudeTextBox.Text, out double lat) && double.TryParse(LongitudeTextBox.Text, out double lon))
             {
                 UserDB userDb = new UserDB();
-                int currentUserId = MainWindow.CurrentUser.Id;
-                bool success = userDb.UpdateUserLocation(currentUserId, lat, lon);
-                _ = BaseDB.SaveChanges();
+                User currentUser = MainWindow.CurrentUser;
 
-                if (success)
+                currentUser.Latitude = lat;
+                currentUser.Longitude = lon;
+
+                userDb.Update(currentUser);
+                int rows = BaseDB.SaveChanges();
+
+
+                //bool success = userDb.UpdateUserLocation(currentUserId, lat, lon);
+                //_ = BaseDB.SaveChanges();
+
+                if (rows>0)
                 {
+                    // update map pin
+
+
                     MessageBox.Show("Location updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 }

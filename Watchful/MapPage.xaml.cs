@@ -22,6 +22,7 @@ namespace Watchful
 
         private DispatcherTimer _zoomUpdateTimer;
         private readonly MainWindow _mainWindow;
+        private Group _currentGroup;
 
         public MapPage(MainWindow mainWindow)
         {
@@ -29,6 +30,7 @@ namespace Watchful
             _mainWindow = mainWindow;
             Map_load();
             FillUserGroups();
+            SetCurrentGroup();
         }
 
         private void FillUserGroups()
@@ -49,6 +51,41 @@ namespace Watchful
             if (groups.Count > 0)
             {
                 groupSelector.SelectedIndex = 0;
+            }
+        }
+
+        private void SetCurrentGroup()
+        {
+            _currentGroup = (Group)groupSelector.SelectedItem;
+        }
+
+        public void ShowUsersOnMap()
+        {
+            gmap.Markers.Clear();
+            UserDB userDB = new UserDB();
+
+
+            if (_currentGroup == null) return;
+            // Get all members of the group
+            UserList members = userDB.GetAllUsersByGroupId(_currentGroup.Id);
+
+            foreach (var member in members)
+            {
+                PointLatLng position = new PointLatLng(member.Latitude, member.Longitude);
+                var marker = new GMapMarker(position)
+                {
+                    Shape = new System.Windows.Shapes.Ellipse
+                    {
+                        Width = 10,
+                        Height = 10,
+                        Stroke = System.Windows.Media.Brushes.Fuchsia,
+                        StrokeThickness = 1.5,
+                        Fill = System.Windows.Media.Brushes.Fuchsia
+                    }
+                };
+
+                // Add the marker to the map
+                gmap.Markers.Add(marker);
             }
         }
 
@@ -144,11 +181,7 @@ namespace Watchful
         }
         private void GroupSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //if (groupSelector.SelectedItem is Group selectedGroup)
-            //{
-            //    // Handle selected group here
-            //    MainWindow.CurrentGroup = selectedGroup;
-            //}
+            SetCurrentGroup();
         }
 
         private void Gmap_MouseRightButtonDown(object sender, MouseButtonEventArgs e)

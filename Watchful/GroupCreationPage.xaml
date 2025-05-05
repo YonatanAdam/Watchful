@@ -128,6 +128,10 @@
                         Margin="0,20,0,0"
                         Click="CreateButton_Click"/>
 
+                <!-- Back Button -->
+                <Button Content="Back" Width="100" Margin="0, 20, 0, 0"
+                Click="BackButton_Click"/>
+
             </StackPanel>
         </Border>
     </Grid>

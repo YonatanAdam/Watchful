@@ -19,56 +19,68 @@ namespace ViewModel
         protected static List<ChangeEntity> deleted = new List<ChangeEntity>();
         protected static List<ChangeEntity> updated = new List<ChangeEntity>();
 
-        protected virtual string CreateInsertSQL(BaseEntity entity)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract string CreateInsertSQL(BaseEntity entity);
+        protected abstract string CreateUpdateSQL(BaseEntity entity);
+        protected abstract string CreateDeleteSQL(BaseEntity entity);
 
-        protected virtual string CreateUpdateSQL(BaseEntity entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual string CreateDeleteSQL(BaseEntity entity)
-        {
-            throw new NotImplementedException();
-        }
 
         protected abstract BaseEntity newEntity();
 
         protected abstract BaseEntity CreateModel(BaseEntity entity);
 
-        //private static string Path()
-        //{
-        //    string[] args = Environment.GetCommandLineArgs();
-        //    string s;
-        //    if (args.Length == 1)
-        //    {
-        //        s = args[0];
-        //    }
-        //    else
-        //    {
-        //        s = args[1];
-        //        s = s.Replace("/Service:", "");
-        //    }
+        /*        private static string Path()
+                {
+                    string[] args = Environment.GetCommandLineArgs();
+                    string s;
+                    if (args.Length == 1)
+                    {
+                        s = args[0];
+                    }
+                    else
+                    {
+                        s = args[1];
+                        s = s.Replace("/Service:", "");
+                    }
 
-        //    string[] ss = s.Split('\\');
-        //    int x = ss.Length - 4; // - ???
-        //    ss[x] = "ViewModel";
-        //    ss[x + 1] = "";
-        //    Array.Resize(ref ss, x + 2);
+                    string[] ss = s.Split('\\');
+                    int x = ss.Length - 4; // - ???
+                    ss[x] = "ViewModel";
+                    ss[x + 1] = "";
+                    Array.Resize(ref ss, x + 2);
 
-        //    string str = string.Join("\\", ss);
-        //    return str;
-        //}
+                    string str = string.Join("\\", ss);
+                    return str;
+                }*/
 
-        public static string GetDbPath() =>
-            Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "Watchful2DB.accdb");
+        private static string GetDatabasePath()
+        {
+            // Get the path of the executable
+            string exePath = Environment.GetCommandLineArgs()[0];
+            string baseDir = Path.GetDirectoryName(exePath);
+
+            // Traverse up to find the "Watchful" root
+            DirectoryInfo dir = new DirectoryInfo(baseDir);
+            while (dir != null && !dir.Name.Equals("Watchful", StringComparison.OrdinalIgnoreCase))
+            {
+                dir = dir.Parent;
+            }
+
+            if (dir == null)
+                throw new InvalidOperationException("Could not locate 'Watchful' directory.");
+
+            // Build path: Watchful\ViewModel\testDesign1.accdb
+            string dbPath = Path.Combine(dir.FullName, "ViewModel", "testDesign1.accdb");
+            return dbPath;
+        }
+
 
         public BaseDB()
         {
             if (connectionString == null)
             {
+
+                /*                string dbPath = GetDatabasePath();
+                                connectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={dbPath};Persist Security Info=True";*/
                 //string dbPath = GetDbPath();
                 //connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + dbPath + ";Persist Security Info=True";
                 connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=D:\Watchful\ViewModel\testDesign1.accdb;Persist Security Info=True";

@@ -37,8 +37,8 @@ namespace ViewModel
         {
             User user = entity as User;
             // Insert only the Name and Password fields, letting the ID auto-increment
-            string sqlStr = string.Format("INSERT INTO UserTbl (UserName, [Password]) " +
-                                          "VALUES('{0}', '{1}')", user.Name, user.Password);
+            string sqlStr = string.Format("INSERT INTO UserTbl (UserName, [Password], Longitude, Latitude) " +
+                                          "VALUES('{0}', '{1}', '{2}', '{3}')", user.Name, user.Password, user.Longitude, user.Latitude);
             return sqlStr;
         }
 
@@ -46,8 +46,10 @@ namespace ViewModel
         {
             User user = entity as User;
             string sqlStr = $"UPDATE UserTbl SET UserName = '{user.Name}'," +
-                            $"Password='{user.Password}'" +
-                            $"WHERE ID={user.Id}";
+                            $"[Password]='{user.Password}'," +
+                            $"Latitude={user.Latitude}," +
+                            $"Longitude={user.Longitude} " +
+                            $" WHERE ID={user.Id}";
             return sqlStr;
         }
 
@@ -70,6 +72,8 @@ namespace ViewModel
             userEntity.Id = Convert.ToInt32(reader["ID"]);
             userEntity.Name = Convert.ToString(reader["UserName"]);
             userEntity.Password = Convert.ToString(reader["Password"]);
+            userEntity.Longitude = Convert.ToDouble(reader["Longitude"]);
+            userEntity.Latitude = Convert.ToDouble(reader["Latitude"]);
             return userEntity;
         }
 
@@ -125,35 +129,13 @@ namespace ViewModel
 
         public bool UpdateUserLocation(int userId, double latitude, double longitude)
         {
-            try
-            {
-                string query = "UPDATE UserTbl SET Latitude = ?, Longitude = ? WHERE ID = ?";
+            //string sqlquery = $"UPDATE UserTbl SET Latitude = {latitude}, Longitude = {longitude} WHERE ID = {userId}";
+            //this.command.CommandText = sqlquery;
 
-                using (OleDbCommand cmd = new OleDbCommand(query, connection))
-                {
-                    cmd.Parameters.AddWithValue("?", latitude);
-                    cmd.Parameters.AddWithValue("?", longitude);
-                    cmd.Parameters.AddWithValue("?", userId);
+            int rowsAffected = this.command.ExecuteNonQuery();
 
-                    connection.Open();
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    _ = BaseDB.SaveChanges();
+            return rowsAffected > 0;
 
-                    return rowsAffected > 0; // Returns true if at least one row was updated
-                }
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error updating location: {e.Message}");
-                return false;
-            }
-            finally
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                {
-                    connection.Close();
-                }
-            }
         }
 
         public Location SelectUserLocation(string tableName, int userId)
@@ -231,6 +213,11 @@ namespace ViewModel
             UserList users = new UserList(Select());
 
             return users;
+        }
+
+        public IEnumerable<User> Select()
+        {
+            throw new NotImplementedException();
         }
     }
 }

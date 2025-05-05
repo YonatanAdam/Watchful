@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModel", "ViewModel\View
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watchful", "Watchful\Watchful.csproj", "{2C07BCD5-B120-4249-A09D-7A067EEE57A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCFWebService", "WCF\WCFWebService.csproj", "{63BF68AC-9437-4539-BB24-A9F99F3D5265}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCFHostConsole", "WCFHostConsole\WCFHostConsole.csproj", "{8B954364-1075-4E70-BD52-3A2B8687358F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{2C07BCD5-B120-4249-A09D-7A067EEE57A0}.Debug|Any CPU.Build.0 = Release|x64
 		{2C07BCD5-B120-4249-A09D-7A067EEE57A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C07BCD5-B120-4249-A09D-7A067EEE57A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63BF68AC-9437-4539-BB24-A9F99F3D5265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63BF68AC-9437-4539-BB24-A9F99F3D5265}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63BF68AC-9437-4539-BB24-A9F99F3D5265}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63BF68AC-9437-4539-BB24-A9F99F3D5265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B954364-1075-4E70-BD52-3A2B8687358F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B954364-1075-4E70-BD52-3A2B8687358F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B954364-1075-4E70-BD52-3A2B8687358F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B954364-1075-4E70-BD52-3A2B8687358F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
