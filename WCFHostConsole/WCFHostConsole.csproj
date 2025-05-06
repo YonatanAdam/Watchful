@@ -60,7 +60,7 @@
       <Project>{9e64d454-b604-4941-81af-fe49f4a9a31d}</Project>
       <Name>ViewModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WCF\WCFWebService.csproj">
+    <ProjectReference Include="..\WCFWebService\WCFWebService.csproj">
       <Project>{63bf68ac-9437-4539-bb24-a9f99f3d5265}</Project>
       <Name>WCFWebService</Name>
     </ProjectReference>

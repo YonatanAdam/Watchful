@@ -269,6 +269,9 @@
     <Compile Include="ModifyMemberWindow.xaml.cs">
       <DependentUpon>ModifyMemberWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RulesWindow.xaml.cs">
+      <DependentUpon>RulesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
@@ -304,6 +307,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ModifyMemberWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RulesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -14,7 +14,7 @@ namespace WCFWeBService
         {
             try
             {
-                return new UserList(_userDb.Select());
+                return new UserList(_userDb.SelectAllUsers());
             }
             catch (Exception ex)
             {

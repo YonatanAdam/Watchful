@@ -215,9 +215,13 @@ namespace ViewModel
             return users;
         }
 
-        public IEnumerable<User> Select()
+        public IEnumerable<User> SelectAllUsers()
         {
-            throw new NotImplementedException();
+            string sqlstmt = $"SELECT ID, UserName, [Password], Latitude, Longitude FROM UserTbl";
+            this.command.CommandText = sqlstmt;
+            var users = new UserList(Select());
+
+            return users;
         }
     }
 }

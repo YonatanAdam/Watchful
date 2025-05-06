@@ -52,38 +52,11 @@ namespace ViewModel
                     return str;
                 }*/
 
-        private static string GetDatabasePath()
-        {
-            // Get the path of the executable
-            string exePath = Environment.GetCommandLineArgs()[0];
-            string baseDir = Path.GetDirectoryName(exePath);
-
-            // Traverse up to find the "Watchful" root
-            DirectoryInfo dir = new DirectoryInfo(baseDir);
-            while (dir != null && !dir.Name.Equals("Watchful", StringComparison.OrdinalIgnoreCase))
-            {
-                dir = dir.Parent;
-            }
-
-            if (dir == null)
-                throw new InvalidOperationException("Could not locate 'Watchful' directory.");
-
-            // Build path: Watchful\ViewModel\testDesign1.accdb
-            string dbPath = Path.Combine(dir.FullName, "ViewModel", "testDesign1.accdb");
-            return dbPath;
-        }
-
-
         public BaseDB()
         {
             if (connectionString == null)
             {
-
-                /*                string dbPath = GetDatabasePath();
-                                connectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={dbPath};Persist Security Info=True";*/
-                //string dbPath = GetDbPath();
-                //connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + dbPath + ";Persist Security Info=True";
-                connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=D:\Watchful\ViewModel\testDesign1.accdb;Persist Security Info=True";
+                connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=..\\..\\..\\..\\ViewModel\\testDesign1.accdb;Persist Security Info=True";
             }
 
             connection = new OleDbConnection(connectionString);

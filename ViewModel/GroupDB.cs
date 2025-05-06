@@ -231,11 +231,11 @@ namespace ViewModel
         public UserList GetUsersByGroup(int groupId)
         {
             // SQL query to join GroupMembersTbl and UserTbl to fetch user details for a specific group
-            string sqlstr = @"
+            string sqlstr = $@"
                 SELECT UserTbl.ID, UserTbl.UserName, UserTbl.[Password], UserTbl.Latitude, UserTbl.Longitude
                 FROM GroupMembersTbl
                 INNER JOIN UserTbl ON GroupMembersTbl.UserID = UserTbl.ID
-                WHERE GroupMembersTbl.GroupID = @GroupId";
+                WHERE GroupMembersTbl.GroupID = {groupId}";
 
             // Set the command text to the SQL query
             this.command.CommandText = sqlstr;

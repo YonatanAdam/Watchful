@@ -11,6 +11,8 @@ using System.Windows.Threading;
 using ViewModel;
 using Location = Model.Location;
 using Model;
+using System.Windows.Media;
+using System.Security.Cryptography;
 
 namespace Watchful
 {
@@ -31,7 +33,24 @@ namespace Watchful
             Map_load();
             FillUserGroups();
             SetCurrentGroup();
+            UpdateRulesButtonVisibility();
         }
+
+        private void UpdateRulesButtonVisibility()
+        {
+            if (_currentGroup != null && MainWindow.CurrentUser != null)
+            {
+                if (MainWindow.CurrentUser.Id == _currentGroup.Admin.Id)
+                {
+                    rulesButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    rulesButton.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
 
         private void FillUserGroups()
         {
@@ -57,6 +76,7 @@ namespace Watchful
         private void SetCurrentGroup()
         {
             _currentGroup = (Group)groupSelector.SelectedItem;
+            ShowUsersOnMap();
         }
 
         public void ShowUsersOnMap()
@@ -72,15 +92,18 @@ namespace Watchful
             foreach (var member in members)
             {
                 PointLatLng position = new PointLatLng(member.Latitude, member.Longitude);
+
+                Color uniqueColor = GenerateColorFromId(member.Id);
+
                 var marker = new GMapMarker(position)
                 {
                     Shape = new System.Windows.Shapes.Ellipse
                     {
                         Width = 10,
                         Height = 10,
-                        Stroke = System.Windows.Media.Brushes.Fuchsia,
+                        Stroke = new SolidColorBrush(uniqueColor),
                         StrokeThickness = 1.5,
-                        Fill = System.Windows.Media.Brushes.Fuchsia
+                        Fill = new SolidColorBrush(uniqueColor)
                     }
                 };
 
@@ -88,6 +111,26 @@ namespace Watchful
                 gmap.Markers.Add(marker);
             }
         }
+
+        private Color GenerateColorFromId(int id)
+        {
+            // Convert ID to bytes
+            byte[] idBytes = BitConverter.GetBytes(id);
+
+            // Compute hash
+            using (var md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(idBytes);
+
+                // Use first 3 bytes of the hash for RGB
+                byte r = hash[0];
+                byte g = hash[1];
+                byte b = hash[2];
+
+                return Color.FromRgb(r, g, b);
+            }
+        }
+
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
@@ -182,31 +225,31 @@ namespace Watchful
         private void GroupSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SetCurrentGroup();
+            UpdateRulesButtonVisibility();
         }
 
         private void Gmap_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+
             // Get the mouse position relative to the GMapControl
             var point = e.GetPosition(gmap);
 
             // Convert the screen coordinates to geographical coordinates (latitude, longitude)
             PointLatLng latLng = gmap.FromLocalToLatLng((int)point.X, (int)point.Y);
 
-            // Create a new marker at the clicked position
-            var marker = new GMapMarker(latLng)
+            // Check if the current user is the admin of the group
+            if (_currentGroup != null && MainWindow.CurrentUser.Id == _currentGroup.Admin.Id)
             {
-                Shape = new System.Windows.Shapes.Ellipse
-                {
-                    Width = 10,
-                    Height = 10,
-                    Stroke = System.Windows.Media.Brushes.Fuchsia,
-                    StrokeThickness = 1.5,
-                    Fill = System.Windows.Media.Brushes.Fuchsia
-                }
-            };
-
-            // Add the marker to the map
-            gmap.Markers.Add(marker);
+                // Open the RulesWindow with the selected location
+                RulesWindow rulesWindow = new RulesWindow(_currentGroup.Id, latLng.Lat, latLng.Lng);
+                rulesWindow.Owner = _mainWindow; // Set the owner to the main window
+                rulesWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                rulesWindow.ShowDialog(); // Show as a modal dialog
+            }
+            else
+            {
+                MessageBox.Show("Only the group admin can set rules.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void GroupButton_Click(object sender, RoutedEventArgs e)
@@ -261,51 +304,6 @@ namespace Watchful
             gmap.Markers.Add(newMarker);
         }
 
-
-        private void LoadMarks_OnClick(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("Loading DB");
-            var db = new LocationDB(); // Ensure LocationDB is correctly implemented
-            Console.WriteLine("DONE Loading DB");
-
-            const string tableName = "LocationTbl"; // Your table name
-
-            // Fetch entities from the table
-            var entities = db.Select(tableName);
-            Console.WriteLine($"Data from {tableName}:");
-            string dbPath = "D:\\Watchful\\ViewModel\\WatchfulDB2.accdb";
-            Console.WriteLine("Database Path: " + dbPath);
-
-
-            // Print each entity's details 
-            foreach (var entity in entities)
-            {
-                var tempLoc = (Location)entity;
-                // PointLatLng latLng = gmap.FromLocalToLatLng((int)tempLoc.Latitude, (int)tempLoc.Longitude);
-                PointLatLng latLng = new PointLatLng(tempLoc.Latitude, tempLoc.Longitude);
-
-                // Create a new marker at the clicked position
-                var marker = new GMapMarker(latLng)
-                {
-                    Shape = new System.Windows.Shapes.Ellipse
-                    {
-                        Width = 10,
-                        Height = 10,
-                        Stroke = System.Windows.Media.Brushes.Red,
-                        StrokeThickness = 1.5,
-                        Fill = System.Windows.Media.Brushes.Red
-                    }
-                };
-
-                // Add the marker to the map
-                gmap.Markers.Add(marker);
-                UpdateLocation();
-                Console.WriteLine(entity.ToString());
-            }
-
-            Console.WriteLine($"End of {tableName}");
-        }
-
         private void AddMark_OnClick(object sender, RoutedEventArgs e)
         {
             (double Lat, double Lng) = (gmap.Position.Lat, gmap.Position.Lng);
@@ -331,6 +329,25 @@ namespace Watchful
             membersWindow.Owner = _mainWindow; // Set the owner to current window
             membersWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             membersWindow.ShowDialog(); // Show as modal dialog
+        }
+
+        private void RulesButton_Click(object sender, RoutedEventArgs e)
+        {
+            /*Group SelectedGroup = groupSelector.SelectedItem as Group;
+
+            if (SelectedGroup == null)
+            {
+                MessageBox.Show("Please select a group first.", "No Group Selected",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // Create and show the rules window
+            RulesWindow rulesWindow = new RulesWindow(SelectedGroup.Id);
+            rulesWindow.Owner = _mainWindow; // Set the owner to current window
+            rulesWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            rulesWindow.ShowDialog(); // Show as modal dialog*/
+            return;
         }
     }
 }

@@ -10,54 +10,98 @@
       Background="#FF1E1E1E">
 
     <Grid>
-        <!-- <Grid.ColumnDefinitions> -->
-        <!--     <ColumnDefinition Width="50*"/> -->
-        <!--     <ColumnDefinition Width="1031*"/> -->
-        <!-- </Grid.ColumnDefinitions> -->
-        <!-- Main layout rows for header and map display -->
         <Grid.RowDefinitions>
-            <!-- Top Header Row for controls and settings button -->
             <RowDefinition Height="Auto"/>
-            <!-- Map Display Row for the GMap control -->
+            <!-- Top bar -->
             <RowDefinition Height="*"/>
+            <!-- Map -->
         </Grid.RowDefinitions>
 
-        <!-- Top Header Bar with Controls (Map Type Selector, Clear Marks, Zoom Level, Coordinates, Settings Button) -->
-        <Grid Grid.Row="0" Background="#FF2A2A2A" FlowDirection="RightToLeft" Grid.ColumnSpan="2">
+        <!-- Top Header Bar -->
+        <Grid Grid.Row="0" Background="#FF2A2A2A">
             <Grid.ColumnDefinitions>
-                <!-- Column for Map Type ComboBox (Auto width) -->
+                <ColumnDefinition Width="100"/>
+                <!-- ComboBox -->
                 <ColumnDefinition Width="Auto"/>
-                <!-- Column for Clear Marks Button (Auto width) -->
+                <!-- Create/Join Group -->
                 <ColumnDefinition Width="Auto"/>
-                <!-- Column for Zoom Level and Coordinates Display (Takes remaining space) -->
+                <!-- List Members -->
                 <ColumnDefinition Width="*"/>
-                <!-- Column for Settings Button (Auto width) -->
+                <!-- Spacer (flexible space) -->
                 <ColumnDefinition Width="Auto"/>
+                <!-- Rules -->
                 <ColumnDefinition Width="Auto"/>
+                <!-- Zoom + Coords -->
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="auto"/>
+                <!-- Settings -->
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="groupSelector" Margin="5,5,5,3" Grid.Column="0" MaxWidth="300" SelectionChanged="GroupSelector_SelectionChanged"
-                      DisplayMemberPath="GroupName" SelectedValuePath="Id"/>
+            <!-- Group Selector -->
+            <ComboBox x:Name="groupSelector"
+                      Grid.Column="0"
+                      Margin="5"
+                      HorizontalAlignment="Center"
+                      HorizontalContentAlignment="Center"
+                      ToolTip="{Binding SelectedItem.GroupName, ElementName=groupSelector}"
+                      MaxDropDownHeight="200"
+                      DisplayMemberPath="GroupName"
+                      SelectedValuePath="Id"
+                      SelectionChanged="GroupSelector_SelectionChanged"/>
 
+            <!-- Create or Join Group Button -->
+            <Button x:Name="groupButton"
+                    Grid.Column="1"
+                    Content="Create or Join Group"
+                    Margin="5"
+                    Height="25"
+                    VerticalAlignment="Center"
+                    Click="GroupButton_Click"/>
 
-            <Button x:Name="groupButton" Grid.Column="1" Margin="5,5,5,0" Content="Create or Join Group" Click="GroupButton_Click" Height="25" VerticalAlignment="Top"/>
-            <Button x:Name="listMembers" Grid.Column="6" Margin="5,5,5,0" Content="List Members" Height="25" VerticalAlignment="Top" Click="listMembers_Click"/>
+            <!-- List Members Button -->
+            <Button x:Name="listMembers"
+                    Grid.Column="2"
+                    Content="List Members"
+                    Margin="5"
+                    Height="25"
+                    VerticalAlignment="Center"
+                    Click="listMembers_Click"/>
 
-            <!-- StackPanel for displaying Zoom Level and Coordinates -->
-            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock x:Name="zoomLvl" Foreground="White" Margin="0,0,10,0"/>
-                <TextBlock x:Name="coordinates" Foreground="White"/>
+            <!-- Rules Button -->
+            <Button x:Name="rulesButton"
+                    Grid.Column="4"
+                    Content="Rules"
+                    Width="60"
+                    Margin="5"
+                    Height="25"
+                    VerticalAlignment="Center"
+                    Visibility="Collapsed"
+                    Click="RulesButton_Click"/>
+
+            <!-- Zoom + Coordinates -->
+            <StackPanel Grid.Column="5"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        Margin="5">
+                <TextBlock x:Name="zoomLvl"
+                           Foreground="White"
+                           Margin="0,0,10,0"/>
+                <TextBlock x:Name="coordinates"
+                           Foreground="White"/>
             </StackPanel>
 
             <!-- Settings Button -->
-            <Button x:Name="settingsButton" Grid.Column="3" Content="Settings" Margin="5" Click="SettingsButton_Click"/>
+            <Button x:Name="settingsButton"
+                    Grid.Column="6"
+                    Content="Settings"
+                    Margin="0, 0 ,20,0"
+                    Height="25"
+                    VerticalAlignment="Center"
+                    Click="SettingsButton_Click"/>
         </Grid>
 
+        <!-- Map Control -->
         <gmaps:GMapControl x:Name="gmap"
-                           Grid.Row="1" Grid.ColumnSpan="2"
+                           Grid.Row="1"
                            MouseRightButtonDown="Gmap_MouseRightButtonDown"/>
     </Grid>
 </Page>
