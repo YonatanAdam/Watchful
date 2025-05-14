@@ -21,9 +21,9 @@ namespace Model
         }
 
         public User Admin
-        { 
+        {
             get { return admin; }
-            set {  admin = value; }
+            set { admin = value; }
         }
 
         public UserList Members { get => members; set => members = value; }

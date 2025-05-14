@@ -73,22 +73,5 @@ namespace Watchful
             // Navigate back to LoginPage
             _mainWindow.MainFrame.Navigate(new LoginPage(_mainWindow));
         }
-
-        private void UserTypeRadio_Checked(object sender, RoutedEventArgs e)
-        {
-            /*            if (GroupCodePanel == null || GroupNamePanel == null)
-                            return; // Controls not initialized yet
-
-                        if (RegularUserRadio.IsChecked == true)
-                        {
-                            GroupCodePanel.Visibility = Visibility.Visible;
-                            GroupNamePanel.Visibility = Visibility.Collapsed;
-                        }
-                        else if (AdminRadio.IsChecked == true)
-                        {
-                            GroupCodePanel.Visibility = Visibility.Collapsed;
-                            GroupNamePanel.Visibility = Visibility.Visible;
-                        }*/
-        }
     }
 }

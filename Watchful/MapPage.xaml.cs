@@ -4,12 +4,10 @@ using GMap.NET;
 using System.Windows;
 using System.Net;
 using System;
-using System.Linq;
 using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using ViewModel;
-using Location = Model.Location;
 using Model;
 using System.Windows.Media;
 using System.Security.Cryptography;
@@ -17,15 +15,19 @@ using System.Security.Cryptography;
 namespace Watchful
 {
     /// <summary>
-    /// Interaction logic for MapPage.xaml
+    /// Interaction logic for MapPage.xaml.
+    /// Displays a map with user and rule markers, allows group selection, and provides map-related actions.
     /// </summary>
     public partial class MapPage : Page
     {
-
         private DispatcherTimer _zoomUpdateTimer;
         private readonly MainWindow _mainWindow;
         private Group _currentGroup;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapPage"/> class.
+        /// </summary>
+        /// <param name="mainWindow">The main application window.</param>
         public MapPage(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -35,33 +37,33 @@ namespace Watchful
             SetCurrentGroup();
         }
 
+        /// <summary>
+        /// Fills the group selector ComboBox with all groups the current user is a member of.
+        /// </summary>
         private void FillUserGroups()
         {
-            // Create an instance of GroupDB to fetch groups
             GroupDB groupDB = new GroupDB();
-
-            // Get the list of groups that the current user is in
             var groups = groupDB.GetAllGroupsForUser(MainWindow.CurrentUser.Id);
-
-            // Set the ComboBox ItemsSource to the groups list
             groupSelector.ItemsSource = groups;
-
-            // Optionally, set a display member if you're using a custom object (e.g., display the GroupName)
             groupSelector.DisplayMemberPath = "GroupName";
-
-            // If you want to select the first group by default (optional)
             if (groups.Count > 0)
             {
                 groupSelector.SelectedIndex = 0;
             }
         }
 
+        /// <summary>
+        /// Sets the current group based on the selected item in the group selector.
+        /// </summary>
         private void SetCurrentGroup()
         {
             _currentGroup = (Group)groupSelector.SelectedItem;
             ShowUsersAndRulesOnMap();
         }
 
+        /// <summary>
+        /// Displays all users and rules of the current group as markers on the map.
+        /// </summary>
         public void ShowUsersAndRulesOnMap()
         {
             gmap.Markers.Clear();
@@ -70,13 +72,11 @@ namespace Watchful
 
             if (_currentGroup == null) return;
             RulesList rules = ruleDB.GetAllRulesByGroupId(_currentGroup.Id);
-            // Get all members of the group
             UserList members = userDB.GetAllUsersByGroupId(_currentGroup.Id);
 
             foreach (var member in members)
             {
                 PointLatLng position = new PointLatLng(member.Latitude, member.Longitude);
-
                 Color uniqueColor = GenerateColorFromId(member.Id);
 
                 var marker = new GMapMarker(position)
@@ -91,7 +91,6 @@ namespace Watchful
                     }
                 };
 
-                // Add the marker to the map
                 gmap.Markers.Add(marker);
             }
 
@@ -115,70 +114,49 @@ namespace Watchful
             }
         }
 
+        /// <summary>
+        /// Generates a unique color based on the given user ID.
+        /// </summary>
+        /// <param name="id">The user ID.</param>
+        /// <returns>A unique <see cref="Color"/> for the user.</returns>
         private Color GenerateColorFromId(int id)
         {
-            // Convert ID to bytes
             byte[] idBytes = BitConverter.GetBytes(id);
-
-            // Compute hash
             using (var md5 = MD5.Create())
             {
                 byte[] hash = md5.ComputeHash(idBytes);
-
-                // Use first 3 bytes of the hash for RGB
                 byte r = hash[0];
                 byte g = hash[1];
                 byte b = hash[2];
-
                 return Color.FromRgb(r, g, b);
             }
         }
 
-
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Navigate to the SettingsPage with page caching
-            _mainWindow.MainFrame.NavigationService.Navigate(new SettingsPage(_mainWindow));
-
-            // Optional: Remove back entry to prevent multiple instances
-            _mainWindow.MainFrame.NavigationService.RemoveBackEntry();
-        }
-
-        private void Map_load(/*object sender, EventArgs e*/)
+        /// <summary>
+        /// Initializes and configures the map control.
+        /// </summary>
+        private void Map_load()
         {
             try
             {
-                // Rotation
                 gmap.Bearing = 0;
-
                 gmap.CanDragMap = true;
                 gmap.DragButton = MouseButton.Left;
-
                 gmap.MaxZoom = 18;
                 gmap.MinZoom = 3;
-
                 gmap.MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
                 gmap.ShowTileGridLines = false;
-                gmap.Zoom = 8;
-                gmap.ShowCenter = true;
+                gmap.Zoom = 10;
+                gmap.ShowCenter = false;
                 gmap.MapProvider = GMapProviders.OpenStreetMap;
-                // In your window/page load or initialization method
-                // mapTypeBox.SelectedIndex = 3;
-                GMaps.Instance.Mode = AccessMode.ServerAndCache; // First run must be with server so the map could load, and then it can be changes to CacheOnly.
-                gmap.Position = new PointLatLng(31.4117257, 35.0818155); // Start in Israel
-
+                GMaps.Instance.Mode = AccessMode.ServerAndCache;
+                gmap.Position = new PointLatLng(31.4117257, 35.0818155);
                 GMapProvider.Language = LanguageType.Hebrew;
-
                 GMapProvider.WebProxy = WebRequest.GetSystemWebProxy();
                 GMapProvider.WebProxy.Credentials = CredentialCache.DefaultCredentials;
-
-                // Initialize zoom display
                 zoomLvl.Text = $"Zoom Level: {gmap.Zoom}";
                 coordinates.Text = $"Coordinate: {gmap.Position.Lat:F3}, {gmap.Position.Lng:F3}";
-
                 gmap.OnPositionChanged += Gmap_OnPositionChanged;
-
-                // Start the timer to update zoom level periodically
                 StartZoomUpdateTimer();
             }
             catch (Exception ex)
@@ -187,69 +165,85 @@ namespace Watchful
             }
         }
 
-        // Start the timer to update the zoom level every 100 ms
+        /// <summary>
+        /// Starts a timer to periodically update the zoom level display.
+        /// </summary>
         private void StartZoomUpdateTimer()
         {
             _zoomUpdateTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(100) // Update every 0.1 second
+                Interval = TimeSpan.FromMilliseconds(100)
             };
 
             _zoomUpdateTimer.Tick += (sender, args) =>
             {
-                // Update the zoom level text block
                 zoomLvl.Text = $"Zoom Level: {gmap.Zoom}";
             };
 
             _zoomUpdateTimer.Start();
         }
 
-        // Event handler for OnPositionChanged
+        /// <summary>
+        /// Handles the map position changed event to update the coordinates display.
+        /// </summary>
+        /// <param name="point">The new map position.</param>
         private void Gmap_OnPositionChanged(PointLatLng point)
         {
-            // Update the coordinates TextBlock with the new position
             coordinates.Text = $"Coordinate: {point.Lat:F3}, {point.Lng:F3}";
         }
 
+        /// <summary>
+        /// Handles the window size changed event to resize the map control.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             gmap.Width = e.NewSize.Width;
             gmap.Height = e.NewSize.Height;
             gmap.InvalidateVisual();
         }
+
+        /// <summary>
+        /// Handles the window closing event to dispose of the map control and shut down the application.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            // Properly dispose of GMapControl to release any resources
             gmap.Dispose();
-
-            // Ensure the application terminates fully
             Application.Current.Shutdown();
         }
+
+        /// <summary>
+        /// Handles the group selector selection changed event to update the current group.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void GroupSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SetCurrentGroup();
         }
 
+        /// <summary>
+        /// Handles the right mouse button down event on the map to add a rule or update user location.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The mouse button event arguments.</param>
         private void Gmap_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Get the mouse position relative to the GMapControl
             var point = e.GetPosition(gmap);
-
-            // Convert the screen coordinates to geographical coordinates (latitude, longitude)
             PointLatLng latLng = gmap.FromLocalToLatLng((int)point.X, (int)point.Y);
 
-            // Check if the current user is the admin of the group
             if (_currentGroup != null && MainWindow.CurrentUser.Id == _currentGroup.Admin.Id)
             {
-                // Open the RulesWindow with the selected location
                 RulesWindow rulesWindow = new RulesWindow(_currentGroup.Id, latLng.Lat, latLng.Lng, this);
-                rulesWindow.Owner = _mainWindow; // Set the owner to the main window
+                rulesWindow.Owner = _mainWindow;
                 rulesWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                rulesWindow.ShowDialog(); // Show as a modal dialog
+                rulesWindow.ShowDialog();
             }
             else
             {
-                // Ask the user if they want to update their location
                 MessageBoxResult result = MessageBox.Show(
                     $"Would you like to update your location to:\nLatitude: {latLng.Lat:F6}\nLongitude: {latLng.Lng:F6}?",
                     "Update Location",
@@ -258,7 +252,6 @@ namespace Watchful
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    // Update the user's location using logic from SettingsPage
                     UserDB userDb = new UserDB();
                     User currentUser = MainWindow.CurrentUser;
                     currentUser.Latitude = latLng.Lat;
@@ -269,7 +262,6 @@ namespace Watchful
                     if (rows > 0)
                     {
                         ShowUsersAndRulesOnMap();
-
                         MessageBox.Show("Location updated successfully!", "Success",
                             MessageBoxButton.OK, MessageBoxImage.Information);
                     }
@@ -282,11 +274,21 @@ namespace Watchful
             }
         }
 
+        /// <summary>
+        /// Handles the group creation button click event to navigate to the group creation page.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void GroupButton_Click(object sender, RoutedEventArgs e)
         {
             _mainWindow.MainFrame.Navigate(new GroupCreationPage(_mainWindow));
         }
 
+        /// <summary>
+        /// Handles the list members button click event to show the group members window.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void listMembers_Click(object sender, RoutedEventArgs e)
         {
             Group SelectedGroup = groupSelector.SelectedItem as Group;
@@ -298,16 +300,19 @@ namespace Watchful
                 return;
             }
 
-            // Create and show the members list window
             GroupMembersWindow membersWindow = new GroupMembersWindow(SelectedGroup.Id, this);
-            membersWindow.Owner = _mainWindow; // Set the owner to current window
+            membersWindow.Owner = _mainWindow;
             membersWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            membersWindow.ShowDialog(); // Show as modal dialog
+            membersWindow.ShowDialog();
         }
 
+        /// <summary>
+        /// Handles the sign out button click event to confirm and sign out the user.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
-            // Confirm before signing out
             MessageBoxResult result = MessageBox.Show("Are you sure you want to sign out?",
                                                      "Confirm Sign Out",
                                                      MessageBoxButton.YesNo,
@@ -319,10 +324,15 @@ namespace Watchful
             }
         }
 
+        /// <summary>
+        /// Updates the map's center location to the specified latitude and longitude.
+        /// </summary>
+        /// <param name="latitude">The latitude to center the map on.</param>
+        /// <param name="longitude">The longitude to center the map on.</param>
         public void UpdateMapLocation(double latitude, double longitude)
         {
             var location = new PointLatLng(latitude, longitude);
-            gmap.Position = location; // Set the center of the map to the new location
+            gmap.Position = location;
         }
     }
 }

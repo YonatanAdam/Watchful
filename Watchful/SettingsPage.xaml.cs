@@ -45,15 +45,8 @@ namespace Watchful
                 userDb.Update(currentUser);
                 int rows = BaseDB.SaveChanges();
 
-
-                //bool success = userDb.UpdateUserLocation(currentUserId, lat, lon);
-                //_ = BaseDB.SaveChanges();
-
                 if (rows > 0)
                 {
-                    // update map pin
-
-
                     MessageBox.Show("Location updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 }

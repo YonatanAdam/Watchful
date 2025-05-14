@@ -24,7 +24,7 @@ namespace Watchful
     {
 
         private readonly MainWindow _mainWindow;
-        
+
         public LoginPage(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -35,8 +35,6 @@ namespace Watchful
         {
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
-
-            // Basic validation - replace with actual authentication logic
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Please enter both username and password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -48,17 +46,10 @@ namespace Watchful
             // Validate the username and password
             User user = userDb.Login(username, password);
 
-            if (user !=null)
+            if (user != null)
             {
                 // Assuming login is successful
                 MainWindow.CurrentUser = user;
-
-                GroupDB db = new GroupDB();
-
-                if (db.AdminHasGroup(MainWindow.CurrentUser.Id))
-                {
-                    // do things
-                }
 
                 _mainWindow.MainFrame.Navigate(new MapPage(_mainWindow));
             }

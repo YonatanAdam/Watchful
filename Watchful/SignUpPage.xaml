@@ -85,39 +85,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-        <Style x:Key="ModernRadioButton" TargetType="RadioButton">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Margin" Value="0,0,15,0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RadioButton">
-                        <StackPanel Orientation="Horizontal">
-                            <Border x:Name="RadioBorder" 
-                                    Width="18" 
-                                    Height="18" 
-                                    CornerRadius="9" 
-                                    BorderThickness="2" 
-                                    BorderBrush="#FF007AFF"
-                                    Margin="0,0,8,0">
-                                <Ellipse x:Name="RadioMark" 
-                                         Width="10" 
-                                         Height="10" 
-                                         Fill="#FF007AFF"
-                                         Visibility="Collapsed"/>
-                            </Border>
-                            <ContentPresenter VerticalAlignment="Center"/>
-                        </StackPanel>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="RadioMark" Property="Visibility" Value="Visible"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Page.Resources>
 
     <Grid>

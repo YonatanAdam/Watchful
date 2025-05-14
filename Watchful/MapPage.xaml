@@ -78,15 +78,6 @@
                            Foreground="White"/>
             </StackPanel>
 
-            <!-- Settings Button -->
-            <!--<Button x:Name="settingsButton"
-                    Grid.Column="6"
-                    Content="Set your location"
-                    Margin="0,0,20,5"
-                    Height="25"
-                    VerticalAlignment="Bottom"
-                    Click="SettingsButton_Click"/>-->
-
             <Button Content="Sign Out"  Grid.Column="6" Margin="0, 0, 20, 5"
                 Click="SignOutButton_Click"/>
         </Grid>

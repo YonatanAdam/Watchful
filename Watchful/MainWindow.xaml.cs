@@ -30,7 +30,6 @@ namespace Watchful
             }
         }
 
-        // Add this method to your MainWindow class
         public void SignOut()
         {
             // Clear the current user
@@ -40,12 +39,10 @@ namespace Watchful
             // Navigate back to the login page
             MainFrame.Navigate(new LoginPage(this));
 
-            // Optional: Clear navigation history to prevent going back
             while (MainFrame.CanGoBack)
             {
                 MainFrame.RemoveBackEntry();
             }
         }
-
     }
 }
