@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Watchful" Height="900" Width="1600"
         Icon="assets\watchful-logo2.ico"
-        Background="#FF1E1E1E">
+        Background="#FF1E1E1E" ResizeMode="NoResize">
 
     <Grid>
         <Frame Name="MainFrame" NavigationUIVisibility="Hidden" JournalOwnership="OwnsJournal"/>

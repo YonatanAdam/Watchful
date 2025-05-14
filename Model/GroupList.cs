@@ -9,10 +9,6 @@ namespace Model
         {
         }
 
-        // public GroupList(IEnumerable<NavHistory> list) : base(list)
-        // {
-        // }
-
         public GroupList(IEnumerable<BaseEntity> list) : base(list.Cast<Group>().ToList())
         {
         }

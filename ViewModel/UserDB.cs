@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -36,7 +37,6 @@ namespace ViewModel
         protected override string CreateInsertSQL(BaseEntity entity)
         {
             User user = entity as User;
-            // Insert only the Name and Password fields, letting the ID auto-increment
             string sqlStr = string.Format("INSERT INTO UserTbl (UserName, [Password], Longitude, Latitude) " +
                                           "VALUES('{0}', '{1}', '{2}', '{3}')", user.Name, user.Password, user.Longitude, user.Latitude);
             return sqlStr;
@@ -129,9 +129,6 @@ namespace ViewModel
 
         public bool UpdateUserLocation(int userId, double latitude, double longitude)
         {
-            //string sqlquery = $"UPDATE UserTbl SET Latitude = {latitude}, Longitude = {longitude} WHERE ID = {userId}";
-            //this.command.CommandText = sqlquery;
-
             int rowsAffected = this.command.ExecuteNonQuery();
 
             return rowsAffected > 0;
@@ -223,5 +220,21 @@ namespace ViewModel
 
             return users;
         }
+
+        public void RemoveUserFromGroup(int userId, int groupId)
+        {
+            string connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=..\\..\\..\\..\\ViewModel\\testDesign1.accdb;Persist Security Info=True";
+            string sql = $"DELETE FROM GroupMembersTbl WHERE UserId = {userId} AND GroupId = {groupId}";
+
+            using (OleDbConnection connection = new OleDbConnection(connectionString))
+            {
+                using (OleDbCommand command = new OleDbCommand(sql, connection))
+                {
+                    connection.Open(); // Open the connection
+                    command.ExecuteNonQuery(); // Execute the SQL command
+                }
+            }
+        }
+
     }
 }

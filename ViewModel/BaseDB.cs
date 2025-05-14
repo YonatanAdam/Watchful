@@ -28,35 +28,11 @@ namespace ViewModel
 
         protected abstract BaseEntity CreateModel(BaseEntity entity);
 
-        /*        private static string Path()
-                {
-                    string[] args = Environment.GetCommandLineArgs();
-                    string s;
-                    if (args.Length == 1)
-                    {
-                        s = args[0];
-                    }
-                    else
-                    {
-                        s = args[1];
-                        s = s.Replace("/Service:", "");
-                    }
-
-                    string[] ss = s.Split('\\');
-                    int x = ss.Length - 4; // - ???
-                    ss[x] = "ViewModel";
-                    ss[x + 1] = "";
-                    Array.Resize(ref ss, x + 2);
-
-                    string str = string.Join("\\", ss);
-                    return str;
-                }*/
-
         public BaseDB()
         {
             if (connectionString == null)
             {
-                connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=..\\..\\..\\..\\ViewModel\\testDesign1.accdb;Persist Security Info=True";
+                connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=..\\..\\..\\..\\ViewModel\\WatchfulDB.accdb;Persist Security Info=True";
             }
 
             connection = new OleDbConnection(connectionString);

@@ -4,6 +4,9 @@
              xmlns:local="clr-namespace:Watchful"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
         <!-- Global Font Settings -->
         <Style TargetType="Window">
             <Setter Property="FontFamily" Value="Segoe UI" />

@@ -11,7 +11,7 @@ namespace Watchful
     {
         // Current logged in user
         public static User CurrentUser { get; set; }
-        public static Group CurrentGroup { get; set; } // Not sure if this is needed
+        public static Group CurrentGroup { get; set; }
 
 
         public MainWindow()
@@ -26,7 +26,24 @@ namespace Watchful
         {
             if (e.Content is MapPage mapPage)
             {
-                mapPage.ShowUsersOnMap();
+                mapPage.ShowUsersAndRulesOnMap();
+            }
+        }
+
+        // Add this method to your MainWindow class
+        public void SignOut()
+        {
+            // Clear the current user
+            CurrentUser = null;
+            CurrentGroup = null;
+
+            // Navigate back to the login page
+            MainFrame.Navigate(new LoginPage(this));
+
+            // Optional: Clear navigation history to prevent going back
+            while (MainFrame.CanGoBack)
+            {
+                MainFrame.RemoveBackEntry();
             }
         }
 

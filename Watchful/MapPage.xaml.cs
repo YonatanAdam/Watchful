@@ -33,24 +33,7 @@ namespace Watchful
             Map_load();
             FillUserGroups();
             SetCurrentGroup();
-            UpdateRulesButtonVisibility();
         }
-
-        private void UpdateRulesButtonVisibility()
-        {
-            if (_currentGroup != null && MainWindow.CurrentUser != null)
-            {
-                if (MainWindow.CurrentUser.Id == _currentGroup.Admin.Id)
-                {
-                    rulesButton.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    rulesButton.Visibility = Visibility.Collapsed;
-                }
-            }
-        }
-
 
         private void FillUserGroups()
         {
@@ -76,16 +59,17 @@ namespace Watchful
         private void SetCurrentGroup()
         {
             _currentGroup = (Group)groupSelector.SelectedItem;
-            ShowUsersOnMap();
+            ShowUsersAndRulesOnMap();
         }
 
-        public void ShowUsersOnMap()
+        public void ShowUsersAndRulesOnMap()
         {
             gmap.Markers.Clear();
             UserDB userDB = new UserDB();
-
+            RuleDB ruleDB = new RuleDB();
 
             if (_currentGroup == null) return;
+            RulesList rules = ruleDB.GetAllRulesByGroupId(_currentGroup.Id);
             // Get all members of the group
             UserList members = userDB.GetAllUsersByGroupId(_currentGroup.Id);
 
@@ -108,6 +92,25 @@ namespace Watchful
                 };
 
                 // Add the marker to the map
+                gmap.Markers.Add(marker);
+            }
+
+            foreach (var rule in rules)
+            {
+                PointLatLng position = new PointLatLng(rule.Latitude, rule.Longitude);
+
+                var marker = new GMapMarker(position)
+                {
+                    Shape = new System.Windows.Shapes.Ellipse
+                    {
+                        Width = rule.Radius / 500,
+                        Height = rule.Radius / 500,
+                        Stroke = System.Windows.Media.Brushes.Red,
+                        StrokeThickness = 1.5,
+                        Fill = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(80, 255, 0, 0)),
+                    }
+                };
+
                 gmap.Markers.Add(marker);
             }
         }
@@ -225,12 +228,10 @@ namespace Watchful
         private void GroupSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SetCurrentGroup();
-            UpdateRulesButtonVisibility();
         }
 
         private void Gmap_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-
             // Get the mouse position relative to the GMapControl
             var point = e.GetPosition(gmap);
 
@@ -241,76 +242,49 @@ namespace Watchful
             if (_currentGroup != null && MainWindow.CurrentUser.Id == _currentGroup.Admin.Id)
             {
                 // Open the RulesWindow with the selected location
-                RulesWindow rulesWindow = new RulesWindow(_currentGroup.Id, latLng.Lat, latLng.Lng);
+                RulesWindow rulesWindow = new RulesWindow(_currentGroup.Id, latLng.Lat, latLng.Lng, this);
                 rulesWindow.Owner = _mainWindow; // Set the owner to the main window
                 rulesWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 rulesWindow.ShowDialog(); // Show as a modal dialog
             }
             else
             {
-                MessageBox.Show("Only the group admin can set rules.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
+                // Ask the user if they want to update their location
+                MessageBoxResult result = MessageBox.Show(
+                    $"Would you like to update your location to:\nLatitude: {latLng.Lat:F6}\nLongitude: {latLng.Lng:F6}?",
+                    "Update Location",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Update the user's location using logic from SettingsPage
+                    UserDB userDb = new UserDB();
+                    User currentUser = MainWindow.CurrentUser;
+                    currentUser.Latitude = latLng.Lat;
+                    currentUser.Longitude = latLng.Lng;
+                    userDb.Update(currentUser);
+                    int rows = BaseDB.SaveChanges();
+
+                    if (rows > 0)
+                    {
+                        ShowUsersAndRulesOnMap();
+
+                        MessageBox.Show("Location updated successfully!", "Success",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to update location.", "Error",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
             }
         }
 
         private void GroupButton_Click(object sender, RoutedEventArgs e)
         {
             _mainWindow.MainFrame.Navigate(new GroupCreationPage(_mainWindow));
-        }
-        public void UpdateLocation()
-        {
-            var db = new LocationDB();
-            const string tableName = "LocationTbl";
-
-            // Retrieve the user's latest location from the database
-            var entities = db.Select(tableName);
-
-            // Find the current user's location (assuming there's a global `currentUserId`)
-            Location currentUserLocation = entities
-                .Cast<Location>()
-                .FirstOrDefault(loc => loc.Id == MainWindow.CurrentUser.Id);
-
-            if (currentUserLocation == null)
-            {
-                MessageBox.Show("User location not found.");
-                return;
-            }
-
-            // Remove the previous marker of the current user
-            var oldMarker = gmap.Markers
-                .FirstOrDefault(m => m.Position.Lat == currentUserLocation.Latitude &&
-                                     m.Position.Lng == currentUserLocation.Longitude);
-
-            if (oldMarker != null)
-            {
-                gmap.Markers.Remove(oldMarker);
-            }
-
-            // Add a new green marker at the updated location
-            PointLatLng newLatLng = new PointLatLng(currentUserLocation.Latitude, currentUserLocation.Longitude);
-
-            var newMarker = new GMapMarker(newLatLng)
-            {
-                Shape = new System.Windows.Shapes.Ellipse
-                {
-                    Width = 10,
-                    Height = 10,
-                    Stroke = System.Windows.Media.Brushes.Green,
-                    StrokeThickness = 1.5,
-                    Fill = System.Windows.Media.Brushes.Green
-                }
-            };
-
-            // Add the new marker to the map
-            gmap.Markers.Add(newMarker);
-        }
-
-        private void AddMark_OnClick(object sender, RoutedEventArgs e)
-        {
-            (double Lat, double Lng) = (gmap.Position.Lat, gmap.Position.Lng);
-
-            Location location = new Location(Lat, Lng);
-            LocationDB db = new LocationDB();
-            db.Insert(location);
         }
 
         private void listMembers_Click(object sender, RoutedEventArgs e)
@@ -325,29 +299,30 @@ namespace Watchful
             }
 
             // Create and show the members list window
-            GroupMembersWindow membersWindow = new GroupMembersWindow(SelectedGroup.Id);
+            GroupMembersWindow membersWindow = new GroupMembersWindow(SelectedGroup.Id, this);
             membersWindow.Owner = _mainWindow; // Set the owner to current window
             membersWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             membersWindow.ShowDialog(); // Show as modal dialog
         }
 
-        private void RulesButton_Click(object sender, RoutedEventArgs e)
+        private void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
-            /*Group SelectedGroup = groupSelector.SelectedItem as Group;
+            // Confirm before signing out
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to sign out?",
+                                                     "Confirm Sign Out",
+                                                     MessageBoxButton.YesNo,
+                                                     MessageBoxImage.Question);
 
-            if (SelectedGroup == null)
+            if (result == MessageBoxResult.Yes)
             {
-                MessageBox.Show("Please select a group first.", "No Group Selected",
-                MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
+                _mainWindow.SignOut();
             }
+        }
 
-            // Create and show the rules window
-            RulesWindow rulesWindow = new RulesWindow(SelectedGroup.Id);
-            rulesWindow.Owner = _mainWindow; // Set the owner to current window
-            rulesWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            rulesWindow.ShowDialog(); // Show as modal dialog*/
-            return;
+        public void UpdateMapLocation(double latitude, double longitude)
+        {
+            var location = new PointLatLng(latitude, longitude);
+            gmap.Position = location; // Set the center of the map to the new location
         }
     }
 }

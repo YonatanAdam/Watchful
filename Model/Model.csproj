@@ -53,6 +53,10 @@
     <Compile Include="Location.cs" />
     <Compile Include="GroupList.cs" />
     <Compile Include="LocationList.cs" />
+    <Compile Include="Notification.cs" />
+    <Compile Include="NotificationList.cs" />
+    <Compile Include="Rule.cs" />
+    <Compile Include="RulesList.cs" />
     <Compile Include="UserList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ModelUML.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -39,6 +39,5 @@ namespace Model
             get { return password; }
             set { password = value; }
         }
-
     }
 }

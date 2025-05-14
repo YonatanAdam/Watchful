@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ViewModel;
 
 namespace Watchful
 {
@@ -21,9 +22,10 @@ namespace Watchful
     public partial class RulesWindow : Window
     {
         private int _groupId;
-        private Group _currentGroup;
+        // private Group _currentGroup;
+        private readonly MapPage _mapPage;
 
-        public RulesWindow(int groupId, double latitude, double longitude)
+        public RulesWindow(int groupId, double latitude, double longitude, MapPage mapPage)
         {
             InitializeComponent();
             _groupId = groupId;
@@ -31,6 +33,7 @@ namespace Watchful
             // Pre-fill the latitude and longitude fields
             LatitudeTextBox.Text = latitude.ToString("F6");
             LongitudeTextBox.Text = longitude.ToString("F6");
+            _mapPage = mapPage;
         }
 
         // When the ComboBox selection changes
@@ -55,19 +58,60 @@ namespace Watchful
         // Event for the "Save Rule" button
         private void SaveRuleButton_Click(object sender, RoutedEventArgs e)
         {
+            RuleDB ruleDB = new RuleDB();
             try
             {
-                // Get the values from the input fields
-                double latitude = double.Parse(LatitudeTextBox.Text);
-                double longitude = double.Parse(LongitudeTextBox.Text);
-                double radius = RadiusSlider.Value; // Get the value from the slider
+                // Validate inputs
+                if (RuleComboBox.SelectedItem == null)
+                {
+                    MessageBox.Show("Please select a rule type.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-                // Logic to save or apply the rule
-                MessageBox.Show($"Rule saved with latitude: {latitude}, longitude: {longitude}, radius: {radius}");
+                string ruleName = RuleNameTextBox.Text;
+                string ruleType = ((ComboBoxItem)RuleComboBox.SelectedItem).Content.ToString();
+                if (string.IsNullOrEmpty(ruleName) || string.IsNullOrEmpty(ruleType))
+                {
+                    MessageBox.Show("Rule name and type are required.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (!double.TryParse(LatitudeTextBox.Text, out double latitude) ||
+                    !double.TryParse(LongitudeTextBox.Text, out double longitude))
+                {
+                    MessageBox.Show("Invalid latitude or longitude.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                double radius = RadiusSlider.Value;
+
+                // Create and insert the rule
+                Rule newRule = new Rule
+                {
+                    RuleName = ruleName,
+                    RuleType = ruleType,
+                    Latitude = latitude,
+                    Longitude = longitude,
+                    Radius = radius,
+                    GroupId = _groupId
+                };
+
+                ruleDB.Insert(newRule);
+                int rowsAffected = BaseDB.SaveChanges();
+
+                if (rowsAffected > 0)
+                {
+                    MessageBox.Show("Rule saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _mapPage.ShowUsersAndRulesOnMap();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to save the rule. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving rule: {ex.Message}");
+                MessageBox.Show($"Error saving rule: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -76,6 +120,7 @@ namespace Watchful
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close(); // Close the current window
+
         }
 
         // Method to receive the coordinates from the MapPage

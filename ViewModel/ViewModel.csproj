@@ -54,15 +54,18 @@
     <Compile Include="ChangeEntity.cs" />
     <Compile Include="GroupDB.cs" />
     <Compile Include="LocationDB.cs" />
+    <Compile Include="NotificationDB.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuleDB.cs" />
     <Compile Include="UserDB.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ViewModelUML.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="testDesign1.accdb">
+    <Content Include="WatchfulDB.accdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

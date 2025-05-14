@@ -19,8 +19,6 @@ namespace Watchful
         private void LoadSettings()
         {
             // Load existing settings (placeholder logic)
-            DarkThemeCheckBox.IsChecked = true; // Assume dark theme is enabled by default
-            NotificationsCheckBox.IsChecked = false; // Assume notifications are disabled by default
             LatitudeTextBox.Text = "";
             LongitudeTextBox.Text = "";
         }
@@ -51,7 +49,7 @@ namespace Watchful
                 //bool success = userDb.UpdateUserLocation(currentUserId, lat, lon);
                 //_ = BaseDB.SaveChanges();
 
-                if (rows>0)
+                if (rows > 0)
                 {
                     // update map pin
 

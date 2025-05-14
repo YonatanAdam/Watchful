@@ -9,10 +9,6 @@ namespace Model
         {
         }
 
-        // public LocationList(IEnumerable<NavHistory> list) : base(list)
-        // {
-        // }
-
         public LocationList(IEnumerable<BaseEntity> list) : base(list.Cast<Location>().ToList())
         {
         }

@@ -60,22 +60,11 @@
             <!-- List Members Button -->
             <Button x:Name="listMembers"
                     Grid.Column="2"
-                    Content="List Members"
+                    Content="Group Info"
                     Margin="5"
                     Height="25"
                     VerticalAlignment="Center"
                     Click="listMembers_Click"/>
-
-            <!-- Rules Button -->
-            <Button x:Name="rulesButton"
-                    Grid.Column="4"
-                    Content="Rules"
-                    Width="60"
-                    Margin="5"
-                    Height="25"
-                    VerticalAlignment="Center"
-                    Visibility="Collapsed"
-                    Click="RulesButton_Click"/>
 
             <!-- Zoom + Coordinates -->
             <StackPanel Grid.Column="5"
@@ -90,13 +79,16 @@
             </StackPanel>
 
             <!-- Settings Button -->
-            <Button x:Name="settingsButton"
+            <!--<Button x:Name="settingsButton"
                     Grid.Column="6"
-                    Content="Settings"
-                    Margin="0, 0 ,20,0"
+                    Content="Set your location"
+                    Margin="0,0,20,5"
                     Height="25"
-                    VerticalAlignment="Center"
-                    Click="SettingsButton_Click"/>
+                    VerticalAlignment="Bottom"
+                    Click="SettingsButton_Click"/>-->
+
+            <Button Content="Sign Out"  Grid.Column="6" Margin="0, 0, 20, 5"
+                Click="SignOutButton_Click"/>
         </Grid>
 
         <!-- Map Control -->
